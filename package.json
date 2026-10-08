@@ -1,0 +1,38 @@
+{
+  "name": "uno-scoreboard",
+  "productName": "UNO Scoreboard",
+  "version": "1.5.0",
+  "description": "Track players, rounds, and running totals for UNO matches.",
+  "main": "main.js",
+  "author": "Dinuka",
+  "homepage": "https://github.com/dinuka/uno-scoreboard",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.dinuka.unoscoreboard",
+    "productName": "UNO Scoreboard",
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage"
+      ],
+      "category": "Game",
+      "icon": "build/icons",
+      "maintainer": "Dinuka"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "build/icon.png",
+      "build/icons/**/*"
+    ]
+  }
+}
