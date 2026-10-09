@@ -5,7 +5,7 @@
   <summary>Track players, rounds, and running totals for UNO matches</summary>
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
-  <developer id="io.github.DinukaD97">
+  <developer id="io.github.dinukad97">
     <name>Dinuka</name>
   </developer>
   <description>
@@ -25,6 +25,12 @@
     </ul>
   </description>
   <launchable type="desktop-id">io.github.DinukaD97.UnoScoreboard.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/DinukaD97/uno-scoreboard/main/flatpak/screenshots/main-window.png</image>
+      <caption>Starting a match</caption>
+    </screenshot>
+  </screenshots>
   <url type="homepage">https://github.com/DinukaD97/uno-scoreboard</url>
   <url type="bugtracker">https://github.com/DinukaD97/uno-scoreboard/issues</url>
   <content_rating type="oars-1.1" />
