@@ -142,6 +142,7 @@ label.field{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;te
 .hist-item .row{justify-content:space-between;}
 .sectionhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;gap:10px;flex-wrap:wrap;}
 .muted{color:var(--muted);font-size:13px;}
+a{color:var(--accent);}
 .back{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:4px 0;margin-bottom:8px;}
 .back:hover{color:var(--text);}
 ::-webkit-scrollbar{width:10px;height:10px;}
@@ -160,11 +161,28 @@ label.field{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;te
     <button class="tab" data-view="players">Players</button>
     <button class="tab" data-view="history">History</button>
     <button class="tab" data-view="howto">How To Play</button>
+    <button class="tab" data-view="about">About</button>
   </div>
 
   <div class="view active" id="view-match"></div>
   <div class="view" id="view-players"></div>
   <div class="view" id="view-history"></div>
+  <div class="view" id="view-about">
+    <div class="card">
+      <div class="sectionhead"><h2 style="font-size:18px;">UNO Scoreboard</h2><span class="muted">v1.6.0</span></div>
+      <div class="muted">UNO Scoreboard helps you track players, rounds, and running totals for UNO matches — first to 500 points wins.</div>
+    </div>
+    <div class="card">
+      <div class="sectionhead"><h2 style="font-size:18px;">Contact</h2></div>
+      <div class="muted">Questions or feedback? Reach out:</div>
+      <div style="margin-top:8px;">Email: <a href="mailto:dinukad@hotmail.com">dinukad@hotmail.com</a></div>
+      <div>Phone: <a href="tel:+94712207187">+94 71 220 7187</a></div>
+    </div>
+    <div class="card">
+      <div class="sectionhead"><h2 style="font-size:18px;">Credits</h2></div>
+      <div class="muted">Made by Dinuka, Mira Solutions.</div>
+    </div>
+  </div>
   <div class="view" id="view-howto">
     <div class="card">
       <div class="sectionhead"><h2 style="font-size:18px;">Object</h2></div>
@@ -362,6 +380,14 @@ label.field{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;te
       return Object.assign({}, running);
     });
   }
+  function roundWinner(match, round){
+    var best = null;
+    match.playerIds.forEach(function(id){
+      var s = round.scores[id]||0;
+      if(s>0 && (best===null || s>(round.scores[best]||0))) best = id;
+    });
+    return best;
+  }
   function computeTotals(match){
     var cum = roundRunningTotals(match);
     var totals = {};
@@ -477,20 +503,23 @@ label.field{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;te
 
     var roundRows = match.rounds.map(function(round, idx){
       var cum = running[idx];
+      var winnerOfRound = roundWinner(match, round);
+      var pts = winnerOfRound ? (round.scores[winnerOfRound]||0) : 0;
+      var toGo = winnerOfRound ? LIMIT - cum[winnerOfRound] : null;
       return '<tr>' +
         '<td>'+(idx+1)+'</td>' +
-        match.playerIds.map(function(id){
-          return '<td class="num">'+(round.scores[id]||0)+' <span class="running">('+cum[id]+')</span></td>';
-        }).join('') +
+        '<td><span class="dot" style="background:'+(winnerOfRound?colorFor(winnerOfRound):'transparent')+';display:inline-block;margin-right:5px;vertical-align:middle;"></span>'+(winnerOfRound?esc(playerName(winnerOfRound)):'—')+'</td>' +
+        '<td class="num">'+pts+'</td>' +
+        '<td class="num">'+(toGo===null?'—':(toGo>0?'<span class="running">('+toGo+' to go)</span>':'<span class="running">(reached '+LIMIT+')</span>'))+'</td>' +
         '<td><button class="icon danger" data-del-round="'+idx+'" '+(finished?'disabled':'')+' aria-label="Delete round '+(idx+1)+'">✕</button></td>' +
       '</tr>';
     }).join('');
 
     var roundsTable = match.rounds.length ?
       '<div style="overflow-x:auto;"><table>' +
-        '<tr><th>Round</th>' + match.playerIds.map(function(id){return '<th class="num">'+esc(playerName(id))+'</th>';}).join('') + '<th></th></tr>' +
+        '<tr><th>Round</th><th>Winner</th><th class="num">Points</th><th class="num">Remaining</th><th></th></tr>' +
         roundRows +
-      '</table><div class="muted" style="margin-top:6px;">Number in parentheses is the running total through that round.</div></div>'
+      '</table></div>'
       : '<div class="empty">No rounds yet. Add the first round below.</div>';
 
     var scoreInputs = match.playerIds.map(function(id){
@@ -716,9 +745,15 @@ label.field{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;te
     }).join('');
     var roundRows = m.rounds.map(function(round, idx){
       var cum = running[idx];
-      return '<tr><td>'+(idx+1)+'</td>' +
-        m.playerIds.map(function(id){ return '<td class="num">'+(round.scores[id]||0)+' <span class="running">('+cum[id]+')</span></td>'; }).join('') +
-        '</tr>';
+      var winnerOfRound = roundWinner(m, round);
+      var pts = winnerOfRound ? (round.scores[winnerOfRound]||0) : 0;
+      var toGo = winnerOfRound ? LIMIT - cum[winnerOfRound] : null;
+      return '<tr>' +
+        '<td>'+(idx+1)+'</td>' +
+        '<td><span class="dot" style="background:'+(winnerOfRound?colorFor(winnerOfRound):'transparent')+';display:inline-block;margin-right:5px;vertical-align:middle;"></span>'+(winnerOfRound?esc(playerName(winnerOfRound)):'—')+'</td>' +
+        '<td class="num">'+pts+'</td>' +
+        '<td class="num">'+(toGo===null?'—':(toGo>0?'<span class="running">('+toGo+' to go)</span>':'<span class="running">(reached '+LIMIT+')</span>'))+'</td>' +
+      '</tr>';
     }).join('');
     var date = new Date(m.finishedAt || m.startedAt);
 
@@ -734,10 +769,9 @@ label.field{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;te
       '<div class="card">' +
         '<h3 style="font-size:15px;margin-bottom:10px;">Rounds</h3>' +
         '<div style="overflow-x:auto;"><table>' +
-          '<tr><th>Round</th>' + m.playerIds.map(function(id){return '<th class="num">'+esc(playerName(id))+'</th>';}).join('') + '</tr>' +
+          '<tr><th>Round</th><th>Winner</th><th class="num">Points</th><th class="num">Remaining</th></tr>' +
           roundRows +
         '</table></div>' +
-        '<div class="muted" style="margin-top:6px;">Number in parentheses is the running total through that round.</div>' +
       '</div>';
 
     el.querySelector('#back-to-list').addEventListener('click', function(){ historyDetailId=null; renderHistory(); });
