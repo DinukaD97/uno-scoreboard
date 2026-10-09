@@ -1,7 +1,7 @@
 {
   "name": "uno-scoreboard",
   "productName": "UNO Scoreboard",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Track players, rounds, and running totals for UNO matches.",
   "main": "main.js",
   "author": "Dinuka",
