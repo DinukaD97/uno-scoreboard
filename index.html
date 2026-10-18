@@ -200,7 +200,7 @@ a{color:var(--accent);}
   <div class="view" id="view-history"></div>
   <div class="view" id="view-about">
     <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">UNO Scoreboard</h2><span class="muted">v1.7.0</span></div>
+      <div class="sectionhead"><h2 style="font-size:18px;">UNO Scoreboard</h2><span class="muted">v1.7.1</span></div>
       <div class="muted">UNO Scoreboard helps you track players, rounds, and running totals for UNO matches — first to 500 points wins.</div>
     </div>
     <div class="card">
@@ -470,9 +470,10 @@ a{color:var(--accent);}
   }
   function matchWinner(match){
     var totals = computeTotals(match);
-    var over = match.playerIds.filter(function(id){ return totals[id] >= LIMIT; });
+    var limit = match.winLimit || LIMIT;
+    var over = match.playerIds.filter(function(id){ return totals[id] >= limit; });
     if(over.length===0) return null;
-    // First to 500 wins. If more than one player crosses in the same round, the highest total wins.
+    // First to the limit wins. If more than one player crosses in the same round, the highest total wins.
     var best = over.slice().sort(function(a,b){ return totals[b]-totals[a]; })[0];
     return best;
   }
@@ -518,9 +519,14 @@ a{color:var(--accent);}
 
     el.innerHTML = pausedList +
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:18px;">Start a match</h2><span class="muted">Win at: '+LIMIT+' pts</span></div>' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">Start a match</h2></div>' +
         '<div class="muted" style="margin-bottom:10px;">Pick who is playing.</div>' +
         '<div class="playerlist" id="setup-checks">'+checks+'</div>' +
+        '<div class="row" style="margin-top:16px;align-items:center;gap:8px;">' +
+          '<label for="win-limit-input" class="muted" style="margin:0;">Win at</label>' +
+          '<input type="number" id="win-limit-input" value="'+LIMIT+'" min="50" step="50" style="width:90px;">' +
+          '<span class="muted">pts</span>' +
+        '</div>' +
         '<div class="row" style="margin-top:16px;">' +
           '<button type="button" id="toss-btn">🎲 Pick Dealer</button>' +
         '</div>' +
@@ -563,7 +569,9 @@ a{color:var(--accent);}
       var ids = Array.from(el.querySelectorAll('#setup-checks input:checked')).map(function(c){return c.value;});
       if(ids.length < 2){ alert('Select at least 2 players.'); return; }
       var firstPlayerId = (tossPick && ids.includes(tossPick)) ? tossPick : null;
-      var newMatch = { id: uid(), playerIds: ids, rounds: [], startedAt: Date.now(), finished: false, firstPlayerId: firstPlayerId };
+      var winLimitInput = parseInt(el.querySelector('#win-limit-input').value, 10);
+      var winLimit = (!isNaN(winLimitInput) && winLimitInput >= 50) ? winLimitInput : LIMIT;
+      var newMatch = { id: uid(), playerIds: ids, rounds: [], startedAt: Date.now(), finished: false, firstPlayerId: firstPlayerId, winLimit: winLimit };
       state.activeMatches.push(newMatch);
       state.activeMatchId = newMatch.id;
       save(); renderMatch();
@@ -595,10 +603,11 @@ a{color:var(--accent);}
     var totals = computeTotals(match);
     var winnerId = matchWinner(match);
     var finished = !!winnerId;
+    var winLimit = match.winLimit || LIMIT;
 
     var tiles = match.playerIds.map(function(id){
       var t = totals[id];
-      var isOver = t >= LIMIT;
+      var isOver = t >= winLimit;
       var isWinnerDisplay = finished && id===winnerId;
       var isFirst = match.firstPlayerId === id;
       return '<div class="total-tile '+(isWinnerDisplay?'leader':'')+' '+(isOver && !isWinnerDisplay?'over':'')+'">' +
@@ -609,7 +618,7 @@ a{color:var(--accent);}
 
     var banner = '';
     if(finished){
-      banner = '<div class="banner">🏆 '+esc(playerName(winnerId))+' wins the match, first to '+LIMIT+' with '+totals[winnerId]+' points!' +
+      banner = '<div class="banner">🏆 '+esc(playerName(winnerId))+' wins the match, first to '+winLimit+' with '+totals[winnerId]+' points!' +
         '<button id="save-match-btn">Save &amp; New Match</button></div>';
     }
 
@@ -617,12 +626,12 @@ a{color:var(--accent);}
       var cum = running[idx];
       var winnerOfRound = roundWinner(match, round);
       var pts = winnerOfRound ? (round.scores[winnerOfRound]||0) : 0;
-      var toGo = winnerOfRound ? LIMIT - cum[winnerOfRound] : null;
+      var toGo = winnerOfRound ? winLimit - cum[winnerOfRound] : null;
       return '<tr>' +
         '<td>'+(idx+1)+'</td>' +
         '<td><span class="dot" style="background:'+(winnerOfRound?colorFor(winnerOfRound):'transparent')+';display:inline-block;margin-right:5px;vertical-align:middle;"></span>'+(winnerOfRound?esc(playerName(winnerOfRound)):'—')+'</td>' +
         '<td class="num">'+pts+'</td>' +
-        '<td class="num">'+(toGo===null?'—':(toGo>0?'<span class="running">('+toGo+' to go)</span>':'<span class="running">(reached '+LIMIT+')</span>'))+'</td>' +
+        '<td class="num">'+(toGo===null?'—':(toGo>0?'<span class="running">('+toGo+' to go)</span>':'<span class="running">(reached '+winLimit+')</span>'))+'</td>' +
         '<td><button class="icon danger" data-del-round="'+idx+'" '+(finished?'disabled':'')+' aria-label="Delete round '+(idx+1)+'">✕</button></td>' +
       '</tr>';
     }).join('');
@@ -675,7 +684,7 @@ a{color:var(--accent);}
     el.innerHTML =
       banner +
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:18px;">Totals</h2><span class="muted">'+match.rounds.length+' round'+(match.rounds.length===1?'':'s')+' played</span></div>' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">Totals</h2><span class="muted">Win at: '+winLimit+' pts · '+match.rounds.length+' round'+(match.rounds.length===1?'':'s')+' played</span></div>' +
         '<div class="totals-bar">'+tiles+'</div>' +
         (match.firstPlayerId ? '<div class="muted first-move-line">🎲 Dealer: '+esc(playerName(match.firstPlayerId))+'</div>' : '') +
       '</div>' +
@@ -959,16 +968,17 @@ a{color:var(--accent);}
         '<div class="score">'+totals[id]+'</div>' +
       '</div>';
     }).join('');
+    var historyWinLimit = m.winLimit || LIMIT;
     var roundRows = m.rounds.map(function(round, idx){
       var cum = running[idx];
       var winnerOfRound = roundWinner(m, round);
       var pts = winnerOfRound ? (round.scores[winnerOfRound]||0) : 0;
-      var toGo = winnerOfRound ? LIMIT - cum[winnerOfRound] : null;
+      var toGo = winnerOfRound ? historyWinLimit - cum[winnerOfRound] : null;
       return '<tr>' +
         '<td>'+(idx+1)+'</td>' +
         '<td><span class="dot" style="background:'+(winnerOfRound?colorFor(winnerOfRound):'transparent')+';display:inline-block;margin-right:5px;vertical-align:middle;"></span>'+(winnerOfRound?esc(playerName(winnerOfRound)):'—')+'</td>' +
         '<td class="num">'+pts+'</td>' +
-        '<td class="num">'+(toGo===null?'—':(toGo>0?'<span class="running">('+toGo+' to go)</span>':'<span class="running">(reached '+LIMIT+')</span>'))+'</td>' +
+        '<td class="num">'+(toGo===null?'—':(toGo>0?'<span class="running">('+toGo+' to go)</span>':'<span class="running">(reached '+historyWinLimit+')</span>'))+'</td>' +
       '</tr>';
     }).join('');
     var date = new Date(m.finishedAt || m.startedAt);
