@@ -128,7 +128,25 @@ label.field{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;te
 .tally-panel{
   margin-top:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%;
 }
-.tally-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.tally-display-row{
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+  background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;
+}
+.tally-display{
+  flex:1;font-family:'IBM Plex Mono';font-size:28px;font-weight:600;color:var(--accent);
+  text-align:right;letter-spacing:.02em;transform-origin:right center;
+}
+.tally-display.pulse{animation:tally-pop .15s ease;}
+@keyframes tally-pop{0%{transform:scale(1.18);}100%{transform:scale(1);}}
+.tally-backspace-btn{
+  font-size:16px;padding:6px 10px;background:var(--surface2);
+}
+.tally-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;}
+.tally-key-btn, .tally-commit-btn{
+  font-family:'IBM Plex Mono';font-size:18px;font-weight:600;padding:12px 4px;
+}
+.tally-commit-btn{background:var(--accent);color:var(--accent-ink);}
+.tally-commit-wide{width:100%;padding:14px 4px;margin-bottom:8px;}
 .tally-card-btn{
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   padding:10px 4px;font-family:'IBM Plex Mono';font-size:16px;font-weight:600;
@@ -136,12 +154,25 @@ label.field{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;te
 .tally-btn-title{font-size:9px;font-family:'IBM Plex Sans';font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;}
 .tally-btn-pts{font-size:16px;}
 .tally-subtotal{font-family:'IBM Plex Mono';color:var(--text);}
+.tally-history-display{font-family:'IBM Plex Mono';font-size:12px;word-break:break-word;}
+.tally-subtotal.pulse{display:inline-block;animation:tally-pop .15s ease;}
+.tally-key-btn, .tally-commit-btn, .tally-card-btn, .tally-backspace-btn{transition:transform .08s ease;}
+.tally-key-btn:active, .tally-commit-btn:active, .tally-card-btn:active, .tally-backspace-btn:active{transform:scale(0.92);}
 
 .hist-item{cursor:pointer;}
 .hist-item:hover{background:var(--surface2);}
 .hist-item .row{justify-content:space-between;}
 .sectionhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;gap:10px;flex-wrap:wrap;}
 .muted{color:var(--muted);font-size:13px;}
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;
+  padding:20px;z-index:1000;
+}
+.modal-overlay[hidden]{display:none;}
+.modal-box{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;max-width:360px;width:100%;
+}
+.modal-message{font-size:15px;line-height:1.4;}
 a{color:var(--accent);}
 .back{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:4px 0;margin-bottom:8px;}
 .back:hover{color:var(--text);}
@@ -169,7 +200,7 @@ a{color:var(--accent);}
   <div class="view" id="view-history"></div>
   <div class="view" id="view-about">
     <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">UNO Scoreboard</h2><span class="muted">v1.6.2</span></div>
+      <div class="sectionhead"><h2 style="font-size:18px;">UNO Scoreboard</h2><span class="muted">v1.7.0</span></div>
       <div class="muted">UNO Scoreboard helps you track players, rounds, and running totals for UNO matches — first to 500 points wins.</div>
     </div>
     <div class="card">
@@ -256,19 +287,40 @@ a{color:var(--accent);}
   </div>
 </div>
 
+<div class="modal-overlay" id="confirm-modal-overlay" hidden>
+  <div class="modal-box">
+    <div class="modal-message"></div>
+    <div class="row" style="justify-content:flex-end;gap:8px;margin-top:16px;">
+      <button type="button" id="modal-cancel-btn">Cancel</button>
+      <button type="button" class="danger" id="modal-confirm-btn">Yes</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
   "use strict";
   var LIMIT = 500;
   var PALETTE = ["#e8392e","#ffc400","#2fa84f","#2f6feb","#ff8a3d","#8e5ce8"];
 
-  var state = { players: [], matches: [], current: null };
+  var state = { players: [], matches: [], activeMatches: [], activeMatchId: null };
   var dataFilePath = '';
+
+  function migrateState(s){
+    if(!Array.isArray(s.activeMatches)){
+      s.activeMatches = s.current ? [s.current] : [];
+      s.activeMatchId = s.current ? s.current.id : null;
+    }
+    delete s.current;
+    if(!s.players) s.players = [];
+    if(!s.matches) s.matches = [];
+    return s;
+  }
 
   async function loadState(){
     try{
       var raw = await window.scoreboardAPI.load();
-      if(raw) return JSON.parse(raw);
+      if(raw) return migrateState(JSON.parse(raw));
     }catch(e){ console.error(e); }
     // One-time migration from the old localStorage-based version.
     try{
@@ -276,16 +328,36 @@ a{color:var(--accent);}
       if(legacy){
         var migrated = JSON.parse(legacy);
         localStorage.removeItem('uno-scoreboard-v1');
-        return migrated;
+        return migrateState(migrated);
       }
     }catch(e){}
-    return { players: [], matches: [], current: null };
+    return { players: [], matches: [], activeMatches: [], activeMatchId: null };
+  }
+  function getActiveMatch(){
+    return state.activeMatches.find(function(m){ return m.id === state.activeMatchId; }) || null;
   }
   function save(){
     try{ window.scoreboardAPI.save(JSON.stringify(state)); }catch(e){ console.error(e); }
   }
   function uid(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36); }
   function esc(s){ return String(s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+
+  function showConfirm(message, onYes){
+    var overlay = document.getElementById('confirm-modal-overlay');
+    overlay.querySelector('.modal-message').textContent = message;
+    overlay.hidden = false;
+    var yesBtn = document.getElementById('modal-confirm-btn');
+    var cancelBtn = document.getElementById('modal-cancel-btn');
+    function cleanup(){
+      overlay.hidden = true;
+      yesBtn.removeEventListener('click', onYesClick);
+      cancelBtn.removeEventListener('click', onCancelClick);
+    }
+    function onYesClick(){ cleanup(); onYes(); }
+    function onCancelClick(){ cleanup(); }
+    yesBtn.addEventListener('click', onYesClick);
+    cancelBtn.addEventListener('click', onCancelClick);
+  }
   function colorFor(playerId){
     var idx = state.players.findIndex(function(p){return p.id===playerId;});
     if(idx<0) idx = 0;
@@ -352,14 +424,15 @@ a{color:var(--accent);}
       }
       state.players.push({id: uid(), name: name});
       save(); inp.value=''; renderPlayers();
-      if(state.current) renderMatch();
+      if(getActiveMatch()) renderMatch();
     });
 
     el.querySelectorAll('[data-remove-player]').forEach(function(btn){
       btn.addEventListener('click', function(){
         var id = btn.dataset.removePlayer;
-        if(state.current && state.current.playerIds.includes(id)){
-          alert('Cannot remove a player who is in the current match. Finish or discard the match first.');
+        var inAnyActiveMatch = state.activeMatches.some(function(m){ return m.playerIds.includes(id); });
+        if(inAnyActiveMatch){
+          alert('Cannot remove a player who is in an active match. Finish or discard that match first.');
           return;
         }
         state.players = state.players.filter(function(p){return p.id!==id;});
@@ -406,16 +479,33 @@ a{color:var(--accent);}
 
   function renderMatch(){
     var el = document.getElementById('view-match');
-    if(!state.current){
+    var match = getActiveMatch();
+    if(!match){
       renderMatchSetup(el);
     } else {
-      renderMatchBoard(el);
+      renderMatchBoard(el, match);
     }
   }
 
   function renderMatchSetup(el){
+    var pausedList = state.activeMatches.length ?
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">Paused matches</h2><span class="muted">'+state.activeMatches.length+'</span></div>' +
+        state.activeMatches.map(function(m){
+          var names = m.playerIds.map(playerName).join(', ');
+          return '<div class="hist-item" data-resume="'+m.id+'">' +
+            '<div class="row" style="justify-content:space-between;align-items:center;">' +
+              '<div><div style="font-weight:600;">'+esc(names)+'</div><div class="muted">'+m.rounds.length+' round'+(m.rounds.length===1?'':'s')+' played</div></div>' +
+              '<button type="button" class="icon danger" data-discard-paused="'+m.id+'" title="Discard" aria-label="Discard paused match">✕</button>' +
+            '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>'
+      : '';
+
     if(state.players.length < 2){
-      el.innerHTML = '<div class="card"><div class="empty">Add at least 2 players on the <strong>Players</strong> tab to start a match.</div></div>';
+      el.innerHTML = pausedList + '<div class="card"><div class="empty">Add at least 2 players on the <strong>Players</strong> tab to start a match.</div></div>';
+      attachPausedListeners(el);
       return;
     }
     var checks = state.players.map(function(p){
@@ -426,7 +516,7 @@ a{color:var(--accent);}
       '</label>';
     }).join('');
 
-    el.innerHTML =
+    el.innerHTML = pausedList +
       '<div class="card">' +
         '<div class="sectionhead"><h2 style="font-size:18px;">Start a match</h2><span class="muted">Win at: '+LIMIT+' pts</span></div>' +
         '<div class="muted" style="margin-bottom:10px;">Pick who is playing.</div>' +
@@ -439,6 +529,7 @@ a{color:var(--accent);}
           '<button class="primary grow" id="start-match-btn">Start Match</button>' +
         '</div>' +
       '</div>';
+    attachPausedListeners(el);
 
     var tossPick = null;
     var tossResultEl = el.querySelector('#toss-result');
@@ -472,13 +563,34 @@ a{color:var(--accent);}
       var ids = Array.from(el.querySelectorAll('#setup-checks input:checked')).map(function(c){return c.value;});
       if(ids.length < 2){ alert('Select at least 2 players.'); return; }
       var firstPlayerId = (tossPick && ids.includes(tossPick)) ? tossPick : null;
-      state.current = { id: uid(), playerIds: ids, rounds: [], startedAt: Date.now(), finished: false, firstPlayerId: firstPlayerId };
+      var newMatch = { id: uid(), playerIds: ids, rounds: [], startedAt: Date.now(), finished: false, firstPlayerId: firstPlayerId };
+      state.activeMatches.push(newMatch);
+      state.activeMatchId = newMatch.id;
       save(); renderMatch();
     });
   }
 
-  function renderMatchBoard(el){
-    var match = state.current;
+  function attachPausedListeners(el){
+    el.querySelectorAll('[data-resume]').forEach(function(row){
+      row.addEventListener('click', function(e){
+        if(e.target.closest('[data-discard-paused]')) return;
+        state.activeMatchId = row.dataset.resume;
+        save(); renderMatch();
+      });
+    });
+    el.querySelectorAll('[data-discard-paused]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var id = btn.dataset.discardPaused;
+        showConfirm('Discard this paused match? This cannot be undone.', function(){
+          state.activeMatches = state.activeMatches.filter(function(m){ return m.id!==id; });
+          save(); renderMatch();
+        });
+      });
+    });
+  }
+
+  function renderMatchBoard(el, match){
     var running = roundRunningTotals(match);
     var totals = computeTotals(match);
     var winnerId = matchWinner(match);
@@ -526,14 +638,21 @@ a{color:var(--accent);}
       var tallyBtn = finished ? '' :
         '<button type="button" class="icon tally-toggle-btn" data-player="'+id+'" title="Tally cards" aria-label="Tally cards for '+esc(playerName(id))+'">🧮</button>';
       var tallyPanel = finished ? '' :
-        '<div class="tally-panel" id="tally-panel-'+id+'" hidden data-subtotal="0" data-history="[]">' +
-          '<div class="tally-grid">' +
-            [0,1,2,3,4,5,6,7,8,9].map(function(n){
-              return '<button type="button" class="tally-card-btn" data-add="'+n+'">'+n+'</button>';
-            }).join('') +
-            '<button type="button" class="tally-card-btn" data-add="20"><span class="tally-btn-title">Skip/Rev/D2</span><span class="tally-btn-pts">20</span></button>' +
-            '<button type="button" class="tally-card-btn" data-add="50"><span class="tally-btn-title">Wild</span><span class="tally-btn-pts">50</span></button>' +
+        '<div class="tally-panel" id="tally-panel-'+id+'" hidden data-subtotal="0" data-history="[]" data-entered="0" data-locked="0">' +
+          '<div class="tally-display-row">' +
+            '<button type="button" class="icon tally-backspace-btn" title="Backspace" aria-label="Backspace">⌫</button>' +
+            '<div class="tally-display">0</div>' +
           '</div>' +
+          '<div class="tally-keypad">' +
+            [7,8,9,4,5,6,1,2,3].map(function(n){
+              return '<button type="button" class="tally-key-btn" data-digit="'+n+'">'+n+'</button>';
+            }).join('') +
+            '<button type="button" class="tally-card-btn tally-value-btn" data-value="20"><span class="tally-btn-title">Skip/Rev/D2</span><span class="tally-btn-pts">20</span></button>' +
+            '<button type="button" class="tally-key-btn" data-digit="0">0</button>' +
+            '<button type="button" class="tally-card-btn tally-value-btn" data-value="50"><span class="tally-btn-title">Wild</span><span class="tally-btn-pts">50</span></button>' +
+          '</div>' +
+          '<button type="button" class="tally-commit-btn tally-commit-wide">+</button>' +
+          '<div class="muted tally-history-display">—</div>' +
           '<div class="row" style="justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:8px;">' +
             '<div class="muted">Tally: <strong class="tally-subtotal">0</strong></div>' +
             '<div class="row" style="gap:6px;">' +
@@ -562,7 +681,11 @@ a{color:var(--accent);}
       '</div>' +
       '<div class="card">' +
         '<div class="sectionhead"><h2 style="font-size:18px;">Rounds</h2>' +
-          '<button class="danger" id="discard-match-btn">Discard match</button>' +
+          '<div class="row" style="gap:6px;flex-wrap:wrap;">' +
+            (finished ? '' : '<button type="button" id="pause-match-btn">⏸ Pause</button>') +
+            (finished ? '' : '<button type="button" class="primary" id="finish-match-btn">🏁 Finish</button>') +
+            '<button class="danger" id="discard-match-btn">Discard match</button>' +
+          '</div>' +
         '</div>' +
         roundsTable +
       '</div>' +
@@ -588,6 +711,18 @@ a{color:var(--accent);}
         save(); renderMatch();
       });
 
+      function tallyPulse(elm){
+        elm.classList.remove('pulse');
+        void elm.offsetWidth;
+        elm.classList.add('pulse');
+      }
+
+      function tallyRenderHistory(panel){
+        var history = JSON.parse(panel.dataset.history || '[]');
+        var historyEl = panel.querySelector('.tally-history-display');
+        historyEl.textContent = history.length ? history.join(' + ') : '—';
+      }
+
       el.querySelectorAll('.tally-toggle-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
           var id = btn.dataset.player;
@@ -599,21 +734,71 @@ a{color:var(--accent);}
             panel.hidden = false;
             panel.dataset.subtotal = '0';
             panel.dataset.history = '[]';
+            panel.dataset.entered = '0';
+            panel.dataset.locked = '0';
             panel.querySelector('.tally-subtotal').textContent = '0';
+            panel.querySelector('.tally-display').textContent = '0';
+            tallyRenderHistory(panel);
           }
         });
       });
 
-      el.querySelectorAll('.tally-card-btn').forEach(function(btn){
+      el.querySelectorAll('.tally-key-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
           var panel = btn.closest('.tally-panel');
-          var add = parseInt(btn.dataset.add, 10) || 0;
+          var digit = parseInt(btn.dataset.digit, 10) || 0;
+          var entered = panel.dataset.locked === '1' ? digit : (parseInt(panel.dataset.entered, 10) || 0) * 10 + digit;
+          panel.dataset.entered = String(entered);
+          panel.dataset.locked = '0';
+          var display = panel.querySelector('.tally-display');
+          display.textContent = String(entered);
+          tallyPulse(display);
+        });
+      });
+
+      el.querySelectorAll('.tally-backspace-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var panel = btn.closest('.tally-panel');
+          var entered = Math.floor((parseInt(panel.dataset.entered, 10) || 0) / 10);
+          panel.dataset.entered = String(entered);
+          panel.dataset.locked = '0';
+          var display = panel.querySelector('.tally-display');
+          display.textContent = String(entered);
+          tallyPulse(display);
+        });
+      });
+
+      el.querySelectorAll('.tally-commit-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var panel = btn.closest('.tally-panel');
+          var entered = parseInt(panel.dataset.entered, 10) || 0;
+          if(entered <= 0) return;
           var history = JSON.parse(panel.dataset.history || '[]');
-          history.push(add);
+          history.push(entered);
           panel.dataset.history = JSON.stringify(history);
-          var subtotal = (parseInt(panel.dataset.subtotal, 10) || 0) + add;
+          var subtotal = (parseInt(panel.dataset.subtotal, 10) || 0) + entered;
           panel.dataset.subtotal = String(subtotal);
-          panel.querySelector('.tally-subtotal').textContent = String(subtotal);
+          var subtotalEl = panel.querySelector('.tally-subtotal');
+          subtotalEl.textContent = String(subtotal);
+          tallyPulse(subtotalEl);
+          panel.dataset.entered = '0';
+          panel.dataset.locked = '0';
+          var display = panel.querySelector('.tally-display');
+          display.textContent = '0';
+          tallyPulse(display);
+          tallyRenderHistory(panel);
+        });
+      });
+
+      el.querySelectorAll('.tally-value-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var panel = btn.closest('.tally-panel');
+          var value = parseInt(btn.dataset.value, 10) || 0;
+          panel.dataset.entered = String(value);
+          panel.dataset.locked = '1';
+          var display = panel.querySelector('.tally-display');
+          display.textContent = String(value);
+          tallyPulse(display);
         });
       });
 
@@ -627,6 +812,7 @@ a{color:var(--accent);}
           var subtotal = (parseInt(panel.dataset.subtotal, 10) || 0) - last;
           panel.dataset.subtotal = String(subtotal);
           panel.querySelector('.tally-subtotal').textContent = String(subtotal);
+          tallyRenderHistory(panel);
         });
       });
 
@@ -648,7 +834,11 @@ a{color:var(--accent);}
           input.value = current + subtotal;
           panel.dataset.subtotal = '0';
           panel.dataset.history = '[]';
+          panel.dataset.entered = '0';
+          panel.dataset.locked = '0';
           panel.querySelector('.tally-subtotal').textContent = '0';
+          panel.querySelector('.tally-display').textContent = '0';
+          tallyRenderHistory(panel);
         });
       });
     }
@@ -662,9 +852,34 @@ a{color:var(--accent);}
 
     var discardBtn = el.querySelector('#discard-match-btn');
     if(discardBtn) discardBtn.addEventListener('click', function(){
-      if(confirm('Discard this match? This cannot be undone.')){
-        state.current = null; save(); renderMatch();
-      }
+      showConfirm('Discard this match? This cannot be undone.', function(){
+        state.activeMatches = state.activeMatches.filter(function(m){ return m.id!==match.id; });
+        state.activeMatchId = null;
+        save(); renderMatch();
+      });
+    });
+
+    var pauseBtn = el.querySelector('#pause-match-btn');
+    if(pauseBtn) pauseBtn.addEventListener('click', function(){
+      state.activeMatchId = null;
+      save(); renderMatch();
+    });
+
+    var finishBtn = el.querySelector('#finish-match-btn');
+    if(finishBtn) finishBtn.addEventListener('click', function(){
+      showConfirm('Finish this match now? The current top scorer will be declared the winner.', function(){
+        var best = match.playerIds[0];
+        match.playerIds.forEach(function(id){ if(totals[id] > totals[best]) best = id; });
+        match.finished = true;
+        match.finishedAt = Date.now();
+        match.winnerId = best;
+        match.totals = totals;
+        state.matches.unshift(match);
+        state.activeMatches = state.activeMatches.filter(function(m){ return m.id!==match.id; });
+        state.activeMatchId = null;
+        save();
+        renderMatch();
+      });
     });
 
     var saveBtn = el.querySelector('#save-match-btn');
@@ -674,7 +889,8 @@ a{color:var(--accent);}
       match.winnerId = winnerId;
       match.totals = totals;
       state.matches.unshift(match);
-      state.current = null;
+      state.activeMatches = state.activeMatches.filter(function(m){ return m.id!==match.id; });
+      state.activeMatchId = null;
       save();
       renderMatch();
     });
@@ -715,11 +931,11 @@ a{color:var(--accent);}
     el.querySelectorAll('[data-delete-match]').forEach(function(btn){
       btn.addEventListener('click', function(e){
         e.stopPropagation();
-        if(confirm('Delete this match from history?')){
-          var id = btn.dataset.deleteMatch;
+        var id = btn.dataset.deleteMatch;
+        showConfirm('Delete this match from history?', function(){
           state.matches = state.matches.filter(function(x){return x.id!==id;});
           save(); renderHistory();
-        }
+        });
       });
     });
     el.querySelectorAll('[data-match]').forEach(function(card){
@@ -776,11 +992,11 @@ a{color:var(--accent);}
 
     el.querySelector('#back-to-list').addEventListener('click', function(){ historyDetailId=null; renderHistory(); });
     el.querySelector('#delete-match-btn').addEventListener('click', function(){
-      if(confirm('Delete this match from history?')){
+      showConfirm('Delete this match from history?', function(){
         state.matches = state.matches.filter(function(x){return x.id!==matchId;});
         historyDetailId = null;
         save(); renderHistory();
-      }
+      });
     });
   }
 
