@@ -200,7 +200,7 @@ a{color:var(--accent);}
   <div class="view" id="view-history"></div>
   <div class="view" id="view-about">
     <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">UNO Scoreboard</h2><span class="muted">v1.7.1</span></div>
+      <div class="sectionhead"><h2 style="font-size:18px;">UNO Scoreboard</h2><span class="muted">v1.8.0</span></div>
       <div class="muted">UNO Scoreboard helps you track players, rounds, and running totals for UNO matches — first to 500 points wins.</div>
     </div>
     <div class="card">
@@ -454,6 +454,7 @@ a{color:var(--accent);}
     });
   }
   function roundWinner(match, round){
+    if(round.winnerId && match.playerIds.includes(round.winnerId)) return round.winnerId;
     var best = null;
     match.playerIds.forEach(function(id){
       var s = round.scores[id]||0;
@@ -643,7 +644,7 @@ a{color:var(--accent);}
       '</table></div>'
       : '<div class="empty">No rounds yet. Add the first round below.</div>';
 
-    var scoreInputs = match.playerIds.map(function(id){
+    var winnerEntryBlocks = match.playerIds.map(function(id){
       var tallyBtn = finished ? '' :
         '<button type="button" class="icon tally-toggle-btn" data-player="'+id+'" title="Tally cards" aria-label="Tally cards for '+esc(playerName(id))+'">🧮</button>';
       var tallyPanel = finished ? '' :
@@ -671,7 +672,8 @@ a{color:var(--accent);}
             '</div>' +
           '</div>' +
         '</div>';
-      return '<div>' +
+      return '<div class="winner-entry" data-player="'+id+'" hidden>' +
+        '<div class="muted" style="margin-bottom:8px;">How many points did '+esc(playerName(id))+' score? <span style="opacity:.8;">(usually the value of every other player\'s remaining cards)</span></div>' +
         '<div class="row" style="justify-content:space-between;align-items:baseline;gap:6px;">' +
           '<label class="field" style="margin-bottom:0;">'+esc(playerName(id))+'</label>' +
           tallyBtn +
@@ -701,22 +703,42 @@ a{color:var(--accent);}
       (finished ? '' :
       '<div class="card">' +
         '<h2 style="font-size:16px;margin-bottom:10px;">Add round '+(match.rounds.length+1)+'</h2>' +
-        '<div class="muted" style="margin-bottom:10px;">Enter the points each player scored this round (the round winner usually scores the value of every other player\'s remaining cards).</div>' +
-        '<div class="row wrap" style="align-items:flex-end;gap:12px;">' + scoreInputs + '</div>' +
-        '<div class="row" style="margin-top:14px;">' +
+        '<div class="muted" style="margin-bottom:6px;">Who won this round?</div>' +
+        '<div class="playerlist" id="round-winner-picks" style="margin-bottom:14px;">' +
+          match.playerIds.map(function(id){
+            return '<label class="player-pill" style="cursor:pointer;">' +
+              '<input type="radio" name="round-winner" value="'+id+'" style="margin:0;">' +
+              '<span class="dot" style="background:'+colorFor(id)+'"></span>' +
+              '<span>'+esc(playerName(id))+'</span>' +
+            '</label>';
+          }).join('') +
+        '</div>' +
+        winnerEntryBlocks +
+        '<div class="row" style="margin-top:14px;" id="add-round-row" hidden>' +
           '<button class="primary grow" id="add-round-btn">Add Round</button>' +
         '</div>' +
       '</div>');
 
     if(!finished){
-      el.querySelector('#add-round-btn').addEventListener('click', function(){
-        var scores = {};
-        var inputs = el.querySelectorAll('.round-score-input');
-        inputs.forEach(function(inp){
-          var v = parseInt(inp.value, 10);
-          scores[inp.dataset.player] = isNaN(v) ? 0 : v;
+      el.querySelectorAll('input[name="round-winner"]').forEach(function(radio){
+        radio.addEventListener('change', function(){
+          el.querySelectorAll('.winner-entry').forEach(function(div){
+            div.hidden = (div.dataset.player !== radio.value);
+          });
+          el.querySelector('#add-round-row').hidden = false;
         });
-        match.rounds.push({ scores: scores });
+      });
+
+      el.querySelector('#add-round-btn').addEventListener('click', function(){
+        var checkedWinner = el.querySelector('input[name="round-winner"]:checked');
+        if(!checkedWinner) return;
+        var winnerId = checkedWinner.value;
+        var input = el.querySelector('.round-score-input[data-player="'+winnerId+'"]');
+        var v = parseInt(input.value, 10);
+        var pts = isNaN(v) ? 0 : v;
+        var scores = {};
+        match.playerIds.forEach(function(id){ scores[id] = (id===winnerId) ? pts : 0; });
+        match.rounds.push({ scores: scores, winnerId: winnerId });
         save(); renderMatch();
       });
 
