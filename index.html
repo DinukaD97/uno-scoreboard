@@ -200,7 +200,7 @@ a{color:var(--accent);}
   <div class="view" id="view-history"></div>
   <div class="view" id="view-about">
     <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">UNO Scoreboard</h2><span class="muted">v1.8.0</span></div>
+      <div class="sectionhead"><h2 style="font-size:18px;">UNO Scoreboard</h2><span class="muted">v1.9.0</span></div>
       <div class="muted">UNO Scoreboard helps you track players, rounds, and running totals for UNO matches — first to 500 points wins.</div>
     </div>
     <div class="card">
@@ -407,11 +407,48 @@ a{color:var(--accent);}
         '<div class="muted" style="margin-bottom:10px;word-break:break-all;">'+esc(dataFilePath || 'Loading…')+'</div>' +
         '<div class="muted" style="margin-bottom:10px;">To move your players and match history to another PC, copy this file there (same path, after installing UNO Scoreboard) and overwrite the one it creates.</div>' +
         '<button id="reveal-data-btn">Show in file manager</button>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:15px;">Backup</h2></div>' +
+        '<div class="muted" style="margin-bottom:10px;">Save your players and match history to a backup file, or load one from another PC.</div>' +
+        '<div class="row" style="gap:8px;flex-wrap:wrap;">' +
+          '<button id="export-backup-btn">Export backup…</button>' +
+          '<button id="import-backup-btn">Import backup…</button>' +
+        '</div>' +
       '</div>';
 
     var revealBtn = document.getElementById('reveal-data-btn');
     if(revealBtn) revealBtn.addEventListener('click', function(){
       try{ window.scoreboardAPI.reveal(); }catch(e){}
+    });
+
+    var exportBackupBtn = document.getElementById('export-backup-btn');
+    if(exportBackupBtn) exportBackupBtn.addEventListener('click', async function(){
+      try{
+        var result = await window.scoreboardAPI.exportBackup(JSON.stringify(state, null, 2));
+        if(result && result.ok) alert('Backup saved to:\n' + result.path);
+      }catch(e){ alert('Failed to export backup.'); }
+    });
+
+    var importBackupBtn = document.getElementById('import-backup-btn');
+    if(importBackupBtn) importBackupBtn.addEventListener('click', async function(){
+      try{
+        var result = await window.scoreboardAPI.importBackup();
+        if(!result || !result.ok) return;
+        var parsed;
+        try{ parsed = JSON.parse(result.content); }catch(e){ alert('That file doesn\'t look like valid backup JSON.'); return; }
+        if(!parsed || !Array.isArray(parsed.players) || !Array.isArray(parsed.matches)){
+          alert('That doesn\'t look like a UNO Scoreboard backup.');
+          return;
+        }
+        showConfirm('Replace all players and match history with the imported backup?', function(){
+          state = migrateState(parsed);
+          save();
+          alert('Backup imported.');
+          renderPlayers();
+          if(getActiveMatch()) renderMatch();
+        });
+      }catch(e){ alert('Failed to import backup.'); }
     });
 
     document.getElementById('add-player-form').addEventListener('submit', function(e){

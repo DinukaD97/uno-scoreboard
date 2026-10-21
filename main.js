@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -39,6 +39,40 @@ ipcMain.handle('scoreboard:reveal', () => {
 });
 
 ipcMain.handle('scoreboard:path', () => dataFile);
+
+ipcMain.handle('scoreboard:exportBackup', async (event, json) => {
+  try {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    const result = await dialog.showSaveDialog(win, {
+      title: 'Export Backup',
+      defaultPath: 'uno-scoreboard-backup.json',
+      filters: [{ name: 'JSON', extensions: ['json'] }]
+    });
+    if (result.canceled || !result.filePath) return { ok: false };
+    fs.writeFileSync(result.filePath, json, 'utf-8');
+    return { ok: true, path: result.filePath };
+  } catch (e) {
+    console.error('Failed to export backup:', e);
+    return { ok: false, error: String(e) };
+  }
+});
+
+ipcMain.handle('scoreboard:importBackup', async (event) => {
+  try {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    const result = await dialog.showOpenDialog(win, {
+      title: 'Import Backup',
+      filters: [{ name: 'JSON', extensions: ['json'] }],
+      properties: ['openFile']
+    });
+    if (result.canceled || !result.filePaths.length) return { ok: false };
+    const content = fs.readFileSync(result.filePaths[0], 'utf-8');
+    return { ok: true, content: content };
+  } catch (e) {
+    console.error('Failed to import backup:', e);
+    return { ok: false, error: String(e) };
+  }
+});
 
 function createWindow() {
   const win = new BrowserWindow({
