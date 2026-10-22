@@ -184,108 +184,24 @@ a{color:var(--accent);}
 <body>
 
 <div class="wrap">
-  <h1>UNO Scoreboard</h1>
-  <div class="tagline">Players, rounds, and running totals — first to 500 wins.</div>
+  <h1 data-tkey="app_title">UNO Scoreboard</h1>
+  <div class="tagline" data-tkey="app_tagline">Players, rounds, and running totals — first to 500 wins.</div>
 
   <div class="tabs">
-    <button class="tab active" data-view="match">Current Match</button>
-    <button class="tab" data-view="players">Players</button>
-    <button class="tab" data-view="history">History</button>
-    <button class="tab" data-view="howto">How To Play</button>
-    <button class="tab" data-view="about">About</button>
+    <button class="tab active" data-view="match" data-tkey="tab_match">Current Match</button>
+    <button class="tab" data-view="players" data-tkey="tab_players">Players</button>
+    <button class="tab" data-view="history" data-tkey="tab_history">History</button>
+    <button class="tab" data-view="howto" data-tkey="tab_howto">How To Play</button>
+    <button class="tab" data-view="about" data-tkey="tab_about">About</button>
+    <button class="tab" data-view="settings" data-tkey="tab_settings">Settings</button>
   </div>
 
   <div class="view active" id="view-match"></div>
   <div class="view" id="view-players"></div>
   <div class="view" id="view-history"></div>
-  <div class="view" id="view-about">
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">UNO Scoreboard</h2><span class="muted">v1.9.1</span></div>
-      <div class="muted">UNO Scoreboard helps you track players, rounds, and running totals for UNO matches — first to 500 points wins.</div>
-    </div>
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Contact</h2></div>
-      <div class="muted">Questions or feedback? Reach out:</div>
-      <div style="margin-top:8px;">Email: <a href="mailto:dinukad@hotmail.com">dinukad@hotmail.com</a></div>
-      <div>Phone: <a href="tel:+94712207187">+94 71 220 7187</a></div>
-    </div>
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Credits</h2></div>
-      <div class="muted">Made by Dinuka, Mira Solutions.</div>
-    </div>
-  </div>
-  <div class="view" id="view-howto">
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Object</h2></div>
-      <div class="muted">Be the first to play every card in your hand each round. When a round ends, you score points based on the cards left in your opponents' hands. First player to reach <strong>500 points</strong> wins the match — this app's Totals and History track that automatically.</div>
-    </div>
-
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">What's in the deck</h2></div>
-      <div class="muted">A standard deck has 112 cards: 19 each of blue, green, red, and yellow number cards (0–9), 8 Skip, 8 Reverse and 8 Draw Two cards (two of each color), 4 Wild cards, 4 Wild Draw Four cards, and 4 blank cards for house rules or replacing a lost card.</div>
-    </div>
-
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Setup</h2></div>
-      <div class="muted">Each player draws a card — highest value deals. The dealer shuffles and deals 7 cards to each player, then places the rest facedown as the draw pile. Flip its top card to start the discard pile (if it's a Wild or Wild Draw Four, shuffle it back in and flip a new one).</div>
-    </div>
-
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Taking a turn</h2></div>
-      <div class="muted">Play starts to the dealer's left and passes to the left. On your turn, play a card that matches the top of the discard pile by <strong>color</strong>, <strong>number</strong>, or <strong>symbol</strong> — or play a Wild card. Can't go? Draw one card from the draw pile; play it if it fits, otherwise your turn ends. If the draw pile ever runs out, reshuffle the discard pile (keeping its top card in place) and keep playing. You may also choose not to play a card you could legally play (<strong>reneging</strong>) — draw instead; you may play that drawn card if it fits, but you can no longer play a card from your hand that turn.</div>
-    </div>
-
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Special cards</h2></div>
-      <table>
-        <tr><th>Card</th><th>Effect</th></tr>
-        <tr><td>Skip</td><td>Next player loses their turn.</td></tr>
-        <tr><td>Reverse</td><td>Direction of play reverses.</td></tr>
-        <tr><td>Draw Two</td><td>Next player draws 2 cards and is skipped.</td></tr>
-        <tr><td>Wild</td><td>Change the color being played.</td></tr>
-        <tr><td>Wild Draw Four</td><td>Change the color; next player draws 4 cards and is skipped. Only playable when you have no card matching the current color — if challenged and found guilty, you draw the 4 cards instead; if innocent, the challenger draws 4 plus 2 more.</td></tr>
-      </table>
-    </div>
-
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Calling "UNO" &amp; going out</h2></div>
-      <div class="muted">When you play your second-to-last card, say <strong>"UNO"</strong> out loud. Forget, and you can still "catch" yourself safely — but only until another player catches you first, or the next player begins their turn (draws or plays). Caught too late? You draw <strong>2 penalty cards</strong>. A hand ends the instant a player plays their last card; if the last card played is a Draw Two or Wild Draw Four, the next player still draws those cards.</div>
-    </div>
-
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Scoring a round</h2></div>
-      <table>
-        <tr><th>Cards left in opponents' hands</th><th>Points</th></tr>
-        <tr><td>Number cards (0–9)</td><td class="num">Face value</td></tr>
-        <tr><td>Skip / Reverse / Draw Two</td><td class="num">20 each</td></tr>
-        <tr><td>Wild / Wild Draw Four</td><td class="num">50 each</td></tr>
-      </table>
-      <div class="muted" style="margin-top:8px;">Add up every card left in your opponents' hands — that total becomes the round winner's score, entered as a round in the Current Match tab. (Blank cards have no fixed value — agree on one with your house rule, or match whatever card they're replacing.)</div>
-      <div class="muted" style="margin-top:8px;">This is the standard scoring method, and the one this app follows: the round winner's total climbs, and <strong>highest</strong> score at 500 wins. The official rules also describe a simpler alternate method with no single "round winner" entered at all: every player keeps their own running total of the cards they're caught holding at the end of each hand, and when someone hits 500 the player with the <strong>lowest</strong> total wins. (This is different from Challenge UNO below, which eliminates players along the way.)</div>
-    </div>
-
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Winning</h2></div>
-      <div class="muted">Keep playing rounds until someone's running total reaches 500. Use <strong>Pick Dealer</strong> at the start of a match to randomly choose who deals (and plays) first.</div>
-    </div>
-
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Blank cards</h2></div>
-      <div class="muted">Use a blank card to replace a card that's lost or damaged from your physical deck (just write its value on it), or invent your own house rule and write it on a blank card to shuffle into the deck.</div>
-    </div>
-
-    <div class="card">
-      <div class="sectionhead"><h2 style="font-size:18px;">Variants</h2></div>
-      <div class="muted" style="margin-bottom:10px;">Official alternate ways to play — this app's scoring always follows the standard rules above regardless of which variant you use at the table.</div>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div><strong>Two players</strong> — Reverse and Skip both let you take another turn immediately instead of passing play. A Draw Two or Wild Draw Four you play sends the draw back to your one opponent, then play returns straight to you.</div>
-        <div><strong>Partners (4 players)</strong> — Sit across from your partner and keep your hands secret from each other. The instant either partner goes out, the hand ends; add together the cards left in both opponents' hands for your team's score.</div>
-        <div><strong>Rotating partners (4 players)</strong> — Play 12 hands total, partnering with each of the other three players for four hands in a row. Track your points scored in each partnership separately; whoever has the highest total after all 12 hands wins.</div>
-        <div><strong>Multi-table tournaments</strong> — With 8 players, run two 4-player partner tables at once, each player paired with someone at the other table, and total every player's scores across all hands.</div>
-        <div><strong>Challenge UNO</strong> — Instead of scoring the winner each hand, keep a running total of the points each player gets caught holding. Reaching a set target (500 suggested) eliminates that player. When two remain, they finish head-to-head using the two-player rules above; whoever hits the target first loses, and the other is the winner.</div>
-      </div>
-    </div>
-  </div>
+  <div class="view" id="view-about"></div>
+  <div class="view" id="view-howto"></div>
+  <div class="view" id="view-settings"></div>
 </div>
 
 <div class="modal-overlay" id="confirm-modal-overlay" hidden>
@@ -303,6 +219,354 @@ a{color:var(--accent);}
   "use strict";
   var LIMIT = 500;
   var PALETTE = ["#e8392e","#ffc400","#2fa84f","#2f6feb","#ff8a3d","#8e5ce8"];
+
+  // ================= I18N =================
+  var LANG_KEY = 'uno-scoreboard-lang';
+  var lang = (function(){ try{ return localStorage.getItem(LANG_KEY) || 'en'; }catch(e){ return 'en'; } })();
+  function setLang(l){ lang = l; try{ localStorage.setItem(LANG_KEY, l); }catch(e){} }
+  var STRINGS = {
+    en: {
+      app_title: "UNO Scoreboard",
+      app_tagline: "Players, rounds, and running totals — first to 500 wins.",
+      tab_match: "Current Match",
+      tab_players: "Players",
+      tab_history: "History",
+      tab_howto: "How To Play",
+      tab_about: "About",
+      tab_settings: "Settings",
+
+      roster_heading: "Roster",
+      players_count: "Players: {n}",
+      player_name_placeholder: "Player name",
+      add_btn: "Add",
+      no_players_empty: "No players yet. Add at least 2 to start a match.",
+      name_exists_placeholder: "Name already exists",
+      remove_player_title: "Remove player",
+      remove_player_aria: "Remove {name}",
+      cannot_remove_active: "Cannot remove a player who is in an active match. Finish or discard that match first.",
+      save_data_heading: "Save data",
+      save_data_loading: "Loading…",
+      save_data_note: "To move your players and match history to another PC, copy this file there (same path, after installing UNO Scoreboard) and overwrite the one it creates.",
+      show_in_file_manager: "Show in file manager",
+      backup_heading: "Backup",
+      backup_note: "Save your players and match history to a backup file, or load one from another PC.",
+      export_backup_btn: "Export backup…",
+      import_backup_btn: "Import backup…",
+      backup_saved_to: "Backup saved to:\n{path}",
+      backup_export_failed: "Failed to export backup.",
+      backup_invalid_json: "That file doesn't look like valid backup JSON.",
+      backup_invalid_format: "That doesn't look like a UNO Scoreboard backup.",
+      backup_replace_confirm: "Replace all players and match history with the imported backup?",
+      backup_imported: "Backup imported.",
+      backup_import_failed: "Failed to import backup.",
+
+      paused_matches_heading: "Paused matches",
+      rounds_played_count: "Rounds played: {n}",
+      discard_paused_title: "Discard",
+      discard_paused_aria: "Discard paused match",
+      add_players_prompt: "Add at least 2 players on the <strong>Players</strong> tab to start a match.",
+      start_match_heading: "Start a match",
+      pick_who_playing: "Pick who is playing.",
+      win_at_label: "Win at",
+      pts_label: "pts",
+      pick_dealer_btn: "🎲 Pick Dealer",
+      dealer_announcement: "🎉 <strong>{name}</strong> is the dealer!",
+      pick_again_btn: "Pick again",
+      select_2_first: "Select at least 2 players first.",
+      select_2: "Select at least 2 players.",
+      start_match_btn: "Start Match",
+
+      totals_heading: "Totals",
+      win_at_rounds_summary: "Win at: {limit} pts · Rounds played: {n}",
+      dealer_label: "🎲 Dealer: {name}",
+      rounds_heading: "Rounds",
+      pause_btn: "⏸ Pause",
+      finish_btn: "🏁 Finish",
+      discard_match_btn: "Discard match",
+      col_round: "Round",
+      col_winner: "Winner",
+      col_points: "Points",
+      col_remaining: "Remaining",
+      to_go: "({n} to go)",
+      reached_limit: "(reached {limit})",
+      delete_round_aria: "Delete round {n}",
+      no_rounds_empty: "No rounds yet. Add the first round below.",
+      add_round_heading: "Add round {n}",
+      who_won_question: "Who won this round?",
+      how_many_points_question: "How many points did {name} score? <span style=\"opacity:.8;\">(usually the value of every other player's remaining cards)</span>",
+      tally_cards_title: "Tally cards",
+      tally_cards_aria: "Tally cards for {name}",
+      backspace_title: "Backspace",
+      backspace_aria: "Backspace",
+      skiprevd2_label: "Skip/Rev/D2",
+      wild_label: "Wild",
+      tally_label: "Tally:",
+      undo_btn: "Undo",
+      close_btn: "Close",
+      add_to_score_btn: "Add to score",
+      add_round_btn: "Add Round",
+      discard_match_confirm: "Discard this match? This cannot be undone.",
+      finish_match_confirm: "Finish this match now? The current top scorer will be declared the winner.",
+      match_win_banner: "🏆 {name} wins the match, first to {limit} with {points} points!",
+      save_new_match_btn: "Save &amp; New Match",
+      discard_paused_confirm: "Discard this paused match? This cannot be undone.",
+
+      match_history_heading: "Match history",
+      finished_count: "{n} finished",
+      no_matches_empty: "No finished matches yet. Play a match to see it here.",
+      delete_match_title: "Delete match",
+      delete_match_aria: "Delete match",
+      rounds_count: "{n} rounds",
+      back_to_all: "← All matches",
+      match_on_date: "Match on {date}",
+      delete_btn: "Delete",
+      rounds_subheading: "Rounds",
+      delete_match_confirm: "Delete this match from history?",
+
+      modal_cancel: "Cancel",
+      modal_yes: "Yes",
+
+      about_app_name: "UNO Scoreboard",
+      about_description: "UNO Scoreboard helps you track players, rounds, and running totals for UNO matches — first to 500 points wins.",
+      contact_heading: "Contact",
+      contact_text: "Questions or feedback? Reach out:",
+      email_label: "Email:",
+      phone_label: "Phone:",
+      credits_heading: "Credits",
+      credits_text: "Made by Dinuka, Mira Solutions.",
+
+      settings_heading: "Settings",
+      language_heading: "Language",
+      language_note: "Choose the app's display language.",
+      language_en: "English",
+      language_si: "Sinhala (සිංහල)",
+
+      howto_object_heading: "Object",
+      howto_object_text: "Be the first to play every card in your hand each round. When a round ends, you score points based on the cards left in your opponents' hands. First player to reach <strong>500 points</strong> wins the match — this app's Totals and History track that automatically.",
+      howto_deck_heading: "What's in the deck",
+      howto_deck_text: "A standard deck has 112 cards: 19 each of blue, green, red, and yellow number cards (0–9), 8 Skip, 8 Reverse and 8 Draw Two cards (two of each color), 4 Wild cards, 4 Wild Draw Four cards, and 4 blank cards for house rules or replacing a lost card.",
+      howto_setup_heading: "Setup",
+      howto_setup_text: "Each player draws a card — highest value deals. The dealer shuffles and deals 7 cards to each player, then places the rest facedown as the draw pile. Flip its top card to start the discard pile (if it's a Wild or Wild Draw Four, shuffle it back in and flip a new one).",
+      howto_turn_heading: "Taking a turn",
+      howto_turn_text: "Play starts to the dealer's left and passes to the left. On your turn, play a card that matches the top of the discard pile by <strong>color</strong>, <strong>number</strong>, or <strong>symbol</strong> — or play a Wild card. Can't go? Draw one card from the draw pile; play it if it fits, otherwise your turn ends. If the draw pile ever runs out, reshuffle the discard pile (keeping its top card in place) and keep playing. You may also choose not to play a card you could legally play (<strong>reneging</strong>) — draw instead; you may play that drawn card if it fits, but you can no longer play a card from your hand that turn.",
+      howto_special_heading: "Special cards",
+      howto_col_card: "Card",
+      howto_col_effect: "Effect",
+      howto_skip_name: "Skip",
+      howto_skip_effect: "Next player loses their turn.",
+      howto_reverse_name: "Reverse",
+      howto_reverse_effect: "Direction of play reverses.",
+      howto_draw2_name: "Draw Two",
+      howto_draw2_effect: "Next player draws 2 cards and is skipped.",
+      howto_wild_name: "Wild",
+      howto_wild_effect: "Change the color being played.",
+      howto_wild4_name: "Wild Draw Four",
+      howto_wild4_effect: "Change the color; next player draws 4 cards and is skipped. Only playable when you have no card matching the current color — if challenged and found guilty, you draw the 4 cards instead; if innocent, the challenger draws 4 plus 2 more.",
+      howto_uno_heading: "Calling \"UNO\" &amp; going out",
+      howto_uno_text: "When you play your second-to-last card, say <strong>\"UNO\"</strong> out loud. Forget, and you can still \"catch\" yourself safely — but only until another player catches you first, or the next player begins their turn (draws or plays). Caught too late? You draw <strong>2 penalty cards</strong>. A hand ends the instant a player plays their last card; if the last card played is a Draw Two or Wild Draw Four, the next player still draws those cards.",
+      howto_scoring_heading: "Scoring a round",
+      howto_scoring_col_cards: "Cards left in opponents' hands",
+      howto_scoring_col_points: "Points",
+      howto_scoring_number_label: "Number cards (0–9)",
+      howto_scoring_number_value: "Face value",
+      howto_scoring_srdlabel: "Skip / Reverse / Draw Two",
+      howto_scoring_20each: "20 each",
+      howto_scoring_wildlabel: "Wild / Wild Draw Four",
+      howto_scoring_50each: "50 each",
+      howto_scoring_note1: "Add up every card left in your opponents' hands — that total becomes the round winner's score, entered as a round in the Current Match tab. (Blank cards have no fixed value — agree on one with your house rule, or match whatever card they're replacing.)",
+      howto_scoring_note2: "This is the standard scoring method, and the one this app follows: the round winner's total climbs, and <strong>highest</strong> score at 500 wins. The official rules also describe a simpler alternate method with no single \"round winner\" entered at all: every player keeps their own running total of the cards they're caught holding at the end of each hand, and when someone hits 500 the player with the <strong>lowest</strong> total wins. (This is different from Challenge UNO below, which eliminates players along the way.)",
+      howto_winning_heading: "Winning",
+      howto_winning_text: "Keep playing rounds until someone's running total reaches 500. Use <strong>Pick Dealer</strong> at the start of a match to randomly choose who deals (and plays) first.",
+      howto_blank_heading: "Blank cards",
+      howto_blank_text: "Use a blank card to replace a card that's lost or damaged from your physical deck (just write its value on it), or invent your own house rule and write it on a blank card to shuffle into the deck.",
+      howto_variants_heading: "Variants",
+      howto_variants_intro: "Official alternate ways to play — this app's scoring always follows the standard rules above regardless of which variant you use at the table.",
+      howto_variant_two_players: "<strong>Two players</strong> — Reverse and Skip both let you take another turn immediately instead of passing play. A Draw Two or Wild Draw Four you play sends the draw back to your one opponent, then play returns straight to you.",
+      howto_variant_partners: "<strong>Partners (4 players)</strong> — Sit across from your partner and keep your hands secret from each other. The instant either partner goes out, the hand ends; add together the cards left in both opponents' hands for your team's score.",
+      howto_variant_rotating: "<strong>Rotating partners (4 players)</strong> — Play 12 hands total, partnering with each of the other three players for four hands in a row. Track your points scored in each partnership separately; whoever has the highest total after all 12 hands wins.",
+      howto_variant_multitable: "<strong>Multi-table tournaments</strong> — With 8 players, run two 4-player partner tables at once, each player paired with someone at the other table, and total every player's scores across all hands.",
+      howto_variant_challenge: "<strong>Challenge UNO</strong> — Instead of scoring the winner each hand, keep a running total of the points each player gets caught holding. Reaching a set target (500 suggested) eliminates that player. When two remain, they finish head-to-head using the two-player rules above; whoever hits the target first loses, and the other is the winner."
+    },
+    si: {
+      app_title: "UNO ලකුණු පුවරුව",
+      app_tagline: "ක්‍රීඩකයින්, වට, සහ ලකුණු එකතුව — මුලින්ම ලකුණු 500ට යන අය ජයග්‍රහණය කරයි.",
+      tab_match: "වත්මන් ක්‍රීඩාව",
+      tab_players: "ක්‍රීඩකයින්",
+      tab_history: "ඉතිහාසය",
+      tab_howto: "සෙල්ලම් කරන හැටි",
+      tab_about: "අප ගැන",
+      tab_settings: "සැකසුම්",
+
+      roster_heading: "ක්‍රීඩක ලැයිස්තුව",
+      players_count: "ක්‍රීඩකයින්: {n}",
+      player_name_placeholder: "ක්‍රීඩකයාගේ නම",
+      add_btn: "එකතු කරන්න",
+      no_players_empty: "තවම ක්‍රීඩකයින් නැත. ක්‍රීඩාවක් පටන් ගැනීමට අවම වශයෙන් දෙදෙනෙකු එකතු කරන්න.",
+      name_exists_placeholder: "මේ නම දැනටමත් තිබේ",
+      remove_player_title: "ක්‍රීඩකයා ඉවත් කරන්න",
+      remove_player_aria: "{name} ඉවත් කරන්න",
+      cannot_remove_active: "ක්‍රීඩාවක නිරත ක්‍රීඩකයෙකු ඉවත් කළ නොහැක. පළමුව එම ක්‍රීඩාව අවසන් කරන්න හෝ ඉවතලන්න.",
+      save_data_heading: "දත්ත සුරැකීම",
+      save_data_loading: "පූරණය වෙමින්…",
+      save_data_note: "ඔබේ ක්‍රීඩකයින් සහ ක්‍රීඩා ඉතිහාසය වෙනත් පරිගණකයකට ගෙන යාමට, මෙම ගොනුව එහි (UNO ලකුණු පුවරුව ස්ථාපනය කිරීමෙන් පසු, එකම ස්ථානයට) පිටපත් කර එහි ඇති ගොනුව උඩින් ලියන්න.",
+      show_in_file_manager: "ගොනු කළමනාකරුවේ පෙන්වන්න",
+      backup_heading: "උපස්ථය",
+      backup_note: "ඔබේ ක්‍රීඩකයින් සහ ක්‍රීඩා ඉතිහාසය උපස්ථ ගොනුවකට සුරකින්න, හෝ වෙනත් පරිගණකයක ගොනුවක් පූරණය කරන්න.",
+      export_backup_btn: "උපස්ථය නිර්යාත කරන්න…",
+      import_backup_btn: "උපස්ථය ආයාත කරන්න…",
+      backup_saved_to: "උපස්ථය සුරකින ලද ස්ථානය:\n{path}",
+      backup_export_failed: "උපස්ථය නිර්යාත කිරීම අසාර්ථක විය.",
+      backup_invalid_json: "එම ගොනුව වලංගු උපස්ථ ගොනුවක් ලෙස නොපෙනේ.",
+      backup_invalid_format: "එම ගොනුව UNO ලකුණු පුවරුව උපස්ථයක් ලෙස නොපෙනේ.",
+      backup_replace_confirm: "ආයාත කළ උපස්ථය මගින් සියලුම ක්‍රීඩකයින් සහ ක්‍රීඩා ඉතිහාසය ප්‍රතිස්ථාපනය කරන්නද?",
+      backup_imported: "උපස්ථය ආයාත කරන ලදී.",
+      backup_import_failed: "උපස්ථය ආයාත කිරීම අසාර්ථක විය.",
+
+      paused_matches_heading: "විරාම කළ ක්‍රීඩා",
+      rounds_played_count: "ක්‍රීඩා කළ වට: {n}",
+      discard_paused_title: "ඉවතලන්න",
+      discard_paused_aria: "විරාම කළ ක්‍රීඩාව ඉවතලන්න",
+      add_players_prompt: "ක්‍රීඩාවක් පටන් ගැනීමට <strong>ක්‍රීඩකයින්</strong> ටැබයෙන් අවම වශයෙන් ක්‍රීඩකයින් දෙදෙනෙකු එකතු කරන්න.",
+      start_match_heading: "ක්‍රීඩාවක් පටන් ගන්න",
+      pick_who_playing: "ක්‍රීඩා කරන අය තෝරන්න.",
+      win_at_label: "ජයග්‍රහණයට අවශ්‍ය ලකුණු",
+      pts_label: "ලකුණු",
+      pick_dealer_btn: "🎲 කාඩ් බෙදන අය තෝරන්න",
+      dealer_announcement: "🎉 කාඩ් බෙදන්නා <strong>{name}</strong>!",
+      pick_again_btn: "නැවත තෝරන්න",
+      select_2_first: "මුලින්ම අවම වශයෙන් ක්‍රීඩකයින් දෙදෙනෙකු තෝරන්න.",
+      select_2: "අවම වශයෙන් ක්‍රීඩකයින් දෙදෙනෙකු තෝරන්න.",
+      start_match_btn: "ක්‍රීඩාව ආරම්භ කරන්න",
+
+      totals_heading: "එකතුව",
+      win_at_rounds_summary: "ජයග්‍රහණයට: ලකුණු {limit} · ක්‍රීඩා කළ වට: {n}",
+      dealer_label: "🎲 කාඩ් බෙදන්නා: {name}",
+      rounds_heading: "වට",
+      pause_btn: "⏸ විරාමය",
+      finish_btn: "🏁 අවසන් කරන්න",
+      discard_match_btn: "ක්‍රීඩාව ඉවතලන්න",
+      col_round: "වටය",
+      col_winner: "ජයග්‍රාහකයා",
+      col_points: "ලකුණු",
+      col_remaining: "ඉතිරිය",
+      to_go: "(තව {n}ක්)",
+      reached_limit: "({limit}ට පැමිණියා)",
+      delete_round_aria: "වටය {n} මකන්න",
+      no_rounds_empty: "තවම වට නැත. පහතින් පළමු වටය එකතු කරන්න.",
+      add_round_heading: "වටය {n} එකතු කරන්න",
+      who_won_question: "මේ වටය දිනුවේ කවුද?",
+      how_many_points_question: "{name} දිනූ ලකුණු කීයද? <span style=\"opacity:.8;\">(සාමාන්‍යයෙන් අනෙක් ක්‍රීඩකයින්ගේ අතේ ඉතිරි කාඩ්වල වටිනාකම)</span>",
+      tally_cards_title: "කාඩ් එකතු කරන්න",
+      tally_cards_aria: "{name}ගේ කාඩ් එකතු කරන්න",
+      backspace_title: "මකන්න",
+      backspace_aria: "එක් අංකයක් මකන්න",
+      skiprevd2_label: "Skip/Rev/D2",
+      wild_label: "Wild",
+      tally_label: "එකතුව:",
+      undo_btn: "අහෝසි කරන්න",
+      close_btn: "වසන්න",
+      add_to_score_btn: "ලකුණුවලට එකතු කරන්න",
+      add_round_btn: "වටය එකතු කරන්න",
+      discard_match_confirm: "මෙම ක්‍රීඩාව ඉවතලන්නද? මෙය ආපසු හැරවිය නොහැක.",
+      finish_match_confirm: "දැන්ම මෙම ක්‍රීඩාව අවසන් කරන්නද? වැඩිම ලකුණු ඇති ක්‍රීඩකයා ජයග්‍රාහකයා ලෙස ප්‍රකාශ වේ.",
+      match_win_banner: "🏆 {name} ක්‍රීඩාව දිනුවා, ලකුණු {limit}ට මුලින්ම ලකුණු {points} කින්!",
+      save_new_match_btn: "සුරකින්න සහ අලුත් සෙල්ලමක්",
+      discard_paused_confirm: "මෙම විරාම කළ ක්‍රීඩාව ඉවතලන්නද? මෙය ආපසු හැරවිය නොහැක.",
+
+      match_history_heading: "ක්‍රීඩා ඉතිහාසය",
+      finished_count: "අවසන් වූ: {n}",
+      no_matches_empty: "තවම අවසන් වූ ක්‍රීඩා නැත. ක්‍රීඩාවක් සෙල්ලම් කර මෙහි බලන්න.",
+      delete_match_title: "ක්‍රීඩාව මකන්න",
+      delete_match_aria: "ක්‍රීඩාව මකන්න",
+      rounds_count: "වට {n}",
+      back_to_all: "← සියලුම ක්‍රීඩා",
+      match_on_date: "{date} දින ක්‍රීඩාව",
+      delete_btn: "මකන්න",
+      rounds_subheading: "වට",
+      delete_match_confirm: "ඉතිහාසයෙන් මෙම ක්‍රීඩාව මකන්නද?",
+
+      modal_cancel: "අවලංගු කරන්න",
+      modal_yes: "ඔව්",
+
+      about_app_name: "UNO ලකුණු පුවරුව",
+      about_description: "UNO ක්‍රීඩා සඳහා ක්‍රීඩකයින්, වට, සහ ලකුණු එකතුව නිරීක්ෂණය කිරීමට UNO ලකුණු පුවරුව උපකාර වේ — මුලින්ම ලකුණු 500ට යන අය ජයග්‍රහණය කරයි.",
+      contact_heading: "සම්බන්ධ වන්න",
+      contact_text: "ප්‍රශ්න හෝ අදහස් තිබේද? අමතන්න:",
+      email_label: "විද්‍යුත් තැපෑල:",
+      phone_label: "දුරකථනය:",
+      credits_heading: "නිර්මාණය",
+      credits_text: "නිර්මාණය: Dinuka, Mira Solutions.",
+
+      settings_heading: "සැකසුම්",
+      language_heading: "භාෂාව",
+      language_note: "යෙදුමේ භාෂාව තෝරන්න.",
+      language_en: "English",
+      language_si: "සිංහල",
+
+      howto_object_heading: "අරමුණ",
+      howto_object_text: "සෑම වටයකම ඔබේ අතේ ඇති සියලුම කාඩ් ක්‍රීඩා කර මුලින්ම ඉවර කරන්න. වටයක් අවසන් වූ විට, අනෙක් ක්‍රීඩකයින්ගේ අතේ ඉතිරි කාඩ් අනුව ඔබට ලකුණු ලැබේ. මුලින්ම <strong>ලකුණු 500</strong> ලබා ගන්නා ක්‍රීඩකයා ක්‍රීඩාව ජයගනී — මෙම යෙදුම මඟින් එම එකතුව සහ ඉතිහාසය ස්වයංක්‍රීයව සටහන් කර ගනියි.",
+      howto_deck_heading: "කාඩ් කට්ටලයේ ඇති දේ",
+      howto_deck_text: "සාමාන්‍ය කට්ටලයක කාඩ් 112ක් ඇත: නිල්, කොළ, රතු, කහ යන සෑම වර්ණයකටම අංක කාඩ් (0–9) 19 බැගින්, Skip කාඩ් 8ක්, Reverse කාඩ් 8ක්, Draw Two කාඩ් 8ක් (සෑම වර්ණයකටම දෙකක් බැගින්), Wild කාඩ් 4ක්, Wild Draw Four කාඩ් 4ක්, සහ නිවසේ නීති සඳහා හෝ නැතිවූ කාඩ්පතක් වෙනුවට යෙදීමට හිස් කාඩ් 4ක්.",
+      howto_setup_heading: "ආරම්භය",
+      howto_setup_text: "සෑම ක්‍රීඩකයෙකුම කාඩ්පතක් අදියි — වැඩිම වටිනාකම ඇති කෙනා කාඩ් බෙදන්නා වේ. කාඩ් බෙදන්නා කට්ටලය මිශ්‍ර කර සෑම ක්‍රීඩකයෙකුටම කාඩ් 7ක් බෙදයි, ඉතිරි කාඩ් උඩුයටිකුරුව තබා අදින කුට්ටිය සාදයි. එහි උඩින්ම ඇති කාඩ්පත පෙරළා දැමීමෙන් පෙරළා දැමීමේ කුට්ටිය ආරම්භ කරයි (එය Wild Draw Four කාඩ් එකක් නම්, එය නැවත කට්ටලයට දමා මිශ්‍ර කර අලුත් කාඩ්පතක් පෙරළිය යුතුයි).",
+      howto_turn_heading: "වාරයක් ගැනීම",
+      howto_turn_text: "ක්‍රීඩාව ආරම්භ වන්නේ කාඩ් බෙදන්නාගේ වම් පසින් වන අතර, වම් දෙසට ගමන් කරයි. ඔබේ වාරයේදී, පෙරළා දැමීමේ කුට්ටියේ උඩින්ම ඇති කාඩ්පතේ <strong>වර්ණය</strong>, <strong>අංකය</strong>, හෝ <strong>සලකුණ</strong> අනුව ගැලපෙන කාඩ්පතක් ක්‍රීඩා කරන්න — නැතහොත් Wild කාඩ්පතක් ක්‍රීඩා කරන්න. ගැලපෙන කාඩ්පතක් නැද්ද? අදින කුට්ටියෙන් එක් කාඩ්පතක් අදින්න; එය ගැලපේ නම් ක්‍රීඩා කරන්න, නැත්නම් ඔබේ වාරය අවසන් වේ. අදින කුට්ටිය කිසි විටෙක හිස් වුවහොත්, පෙරළා දැමීමේ කුට්ටිය (එහි උඩින්ම ඇති කාඩ්පත තබාගෙන) මිශ්‍ර කර ක්‍රීඩාව දිගටම කරගෙන යන්න. ඔබට ක්‍රීඩා කළ හැකි කාඩ්පතක් තිබුණත් එය ක්‍රීඩා නොකර (<strong>reneging</strong>) අදින්නටත් තෝරාගත හැක — එසේ අදින කාඩ්පත ගැලපේ නම් එය ක්‍රීඩා කළ හැකි ය. නමුත් ඉන්පසු ඔබේ අතේ ඇති වෙනත් කාඩ්පතක් එම වාරයේදී ක්‍රීඩා කළ නොහැක.",
+      howto_special_heading: "විශේෂ කාඩ්",
+      howto_col_card: "කාඩ්පත",
+      howto_col_effect: "බලපෑම",
+      howto_skip_name: "Skip",
+      howto_skip_effect: "ඊළඟ ක්‍රීඩකයාගේ වාරය මග හැරේ.",
+      howto_reverse_name: "Reverse",
+      howto_reverse_effect: "ක්‍රීඩා කරන දිශාව ප්‍රතිවිරුද්ධ වේ.",
+      howto_draw2_name: "Draw Two",
+      howto_draw2_effect: "ඊළඟ ක්‍රීඩකයා කාඩ් 2ක් ඇදිය යුතු අතර ඔහුගේ වාරය මග හැරේ.",
+      howto_wild_name: "Wild",
+      howto_wild_effect: "ක්‍රීඩා කරන වර්ණය වෙනස් කරයි.",
+      howto_wild4_name: "Wild Draw Four",
+      howto_wild4_effect: "වර්ණය වෙනස් කරයි; ඊළඟ ක්‍රීඩකයා කාඩ් 4ක් ඇදිය යුතු අතර ඔහුගේ වාරය මග හැරේ. වත්මන් වර්ණයට ගැලපෙන කාඩ්පතක් ඔබේ අතේ නැති විට පමණක් මෙය ක්‍රීඩා කළ හැකි ය. — අභියෝගයට ලක්වී වරදකරු වුවහොත්, ඔබ ම කාඩ් 4 ක් ඇදිය යුතු ය; නිවැරදි නම්, අභියෝග කළ අය කාඩ් 4ක් සහ තවත් 2ක් ඇදිය යුතු ය.",
+      howto_uno_heading: "\"UNO\" කීම සහ ක්‍රීඩාවෙන් ඉවත් වීම",
+      howto_uno_text: "ඔබේ අවසාන කාඩ්පතට පෙර කාඩ්පත ක්‍රීඩා කරන විට, <strong>\"UNO\"</strong> කියා හඬ නගා කියන්න. එය වෙනත් ක්‍රීඩකයකු මතක් කිරීමට පෙර සිදු කළ යුතු ය. එසේ වුවහොත්? ඔබට දඬුවම් කාඩ් <strong>2ක්</strong> ඇදීමට සිදු වේ. නමුත් එම අනෙක් ක්‍රීඩකයාට ඔබ ව අල්ලා ගත හැක්කේ ඔබට පසු ක්‍රීඩකයාගේ කාඩ් පත දැමීමට පෙර පමණි. එසේ නොවුවහොත් ඔබ නිදහස් ය. ක්‍රීඩකයෙකු තම අවසාන කාඩ්පත ක්‍රීඩා කළ ගමන්ම එම වටය අවසන් වේ; අවසාන කාඩ්පත Draw Two හෝ Wild Draw Four කාඩ් එකක් නම්, ඊළඟ ක්‍රීඩකයාට එම අදාල කාඩ් ගණන ඇදීමට සිදු වේ.",
+      howto_scoring_heading: "වටයක ලකුණු ගණනය කිරීම",
+      howto_scoring_col_cards: "විරුද්ධවාදීන්ගේ අතේ ඉතිරි කාඩ්",
+      howto_scoring_col_points: "ලකුණු",
+      howto_scoring_number_label: "අංක කාඩ් (0–9)",
+      howto_scoring_number_value: "කාඩ්පතේ අංකය",
+      howto_scoring_srdlabel: "Skip / Reverse / Draw Two",
+      howto_scoring_20each: "එකකට 20",
+      howto_scoring_wildlabel: "Wild / Wild Draw Four",
+      howto_scoring_50each: "එකකට 50",
+      howto_scoring_note1: "ඔබේ විරුද්ධවාදීන්ගේ අතේ ඉතිරි සියලුම කාඩ්වල ලකුණු එකතු කරන්න — එම එකතුව වටයේ ජයග්‍රාහකයාගේ ලකුණු බවට පත්ව, වත්මන් ක්‍රීඩා ටැබයේ වටයක් ලෙස ඇතුළත් කරයි. (හිස් කාඩ්වලට නියමිත වටිනාකමක් නැත — ඔබේ නිවසේ නීතියකට එකඟ වන්න, නැතහොත් එය ප්‍රතිස්ථාපනය කරන කාඩ්පතේ වටිනාකමට ගළපන්න.)",
+      howto_scoring_note2: "මෙය සම්මත ලකුණු ගණනය කිරීමේ ක්‍රමය වන අතර, මෙම යෙදුම අනුගමනය කරන්නේද එයයි: වටයේ ජයග්‍රාහකයාගේ එකතුව ඉහළ යන අතර, ලකුණු 500දී <strong>වැඩිම</strong> එකතුව ඇති කෙනා ජය ගනී. නිල නීතිවල සරල විකල්ප ක්‍රමයක්ද විස්තර කර ඇත, එහිදී කිසිම \"වටයේ ජයග්‍රාහකයෙක්\" ඇතුළත් නොකරයි — ඒ වෙනුවට සෑම ක්‍රීඩකයෙකුම සෑම අතක් අවසානයේ තමන් අතේ තිබූ කාඩ් වල ලකුණු එකතුව තමන් ම නිරීක්ෂණය කරයි, කවුරුන් හෝ ලකුණු 500ක් ලබා ගතහොත් <strong>අඩුම</strong> එකතුව ඇති කෙනා ජයගනී.",
+      howto_winning_heading: "ජයග්‍රහණය",
+      howto_winning_text: "යම් ක්‍රීඩකයෙකුගේ එකතුව ලකුණු 500ට පැමිණෙන තෙක් ක්‍රීඩා කරගෙන යන්න. ක්‍රීඩාවක් ආරම්භයේදී කාඩ් බෙදන (සහ මුලින්ම ක්‍රීඩා කරන) අය අහඹු ලෙස තෝරා ගැනීමට <strong>කාඩ් බෙදන්නා තෝරන්න</strong> භාවිත කරන්න.",
+      howto_blank_heading: "හිස් කාඩ්",
+      howto_blank_text: "ඔබේ කාඩ් කට්ටලයෙන් නැතිවූ හෝ හානි වූ කාඩ්පතක් වෙනුවට හිස් කාඩ්පතක් භාවිත කරන්න (එහි එම අගය ලියන්න), නැතහොත් ඔබේම නිවසේ නීතියක් නිර්මාණය කර එය හිස් කාඩ්පතක ලියා කට්ටලයට මිශ්‍ර කරන්න.",
+      howto_variants_heading: "වෙනස් ක්‍රම",
+      howto_variants_intro: "ක්‍රීඩා කිරීමට නිල විකල්ප ක්‍රම — ඔබ මේසයේදී කුමන ක්‍රමයක් භාවිත කළත්, මෙම යෙදුමේ ලකුණු ගණනය කිරීම සැමවිටම ඉහත සම්මත නීති අනුගමනය කරයි.",
+      howto_variant_two_players: "<strong>ක්‍රීඩකයින් දෙදෙනෙක්</strong> — Reverse සහ Skip යන දෙකම ක්‍රීඩාව ඉදිරියට යැවීම වෙනුවට ඔබට ක්ෂණිකව තවත් කාඩ්පතක් ක්‍රීඩා කිරීමට ඉඩ දෙයි. ඔබ ක්‍රීඩා කරන Draw Two හෝ Wild Draw Four කාඩ්පතක් ඔබේ එකම විරුද්ධවාදියාට කාඩ් අදීම යවයි, පසුව ක්‍රීඩාව කෙලින්ම ඔබ වෙත නැවත පැමිණේ.",
+      howto_variant_partners: "<strong>සහකරුවන් (ක්‍රීඩකයින් 4)</strong> — ඔබේ සහකරුට ඉදිරිපසින් වාඩි වී, එකිනෙකාගේ අත් රහසිගතව තබා ගන්න. එක් සහකරුවෙකු ඉවර කළ ගමන්ම එම අත අවසන් වේ; ජය ලබන කණ්ඩායමේ ලකුණු ලෙස, විරුද්ධ කණ්ඩායමේ දෙදෙනාගේම අතේ ඉතිරි කාඩ් එකතු කරන්න.",
+      howto_variant_rotating: "<strong>වාරයෙන් වාරයට සහකරුවන් මාරු වීම (ක්‍රීඩකයින් 4)</strong> — මුළුමනින්ම අත් 12ක් ක්‍රීඩා කරන්න, අනෙක් ක්‍රීඩකයන් තිදෙනා සමඟම එකින් එක අත් 4ක් බැගින් සහකාරිත්වයෙන් ක්‍රීඩා කරන්න. සෑම සහකාරිත්වයකදීම ලබන ලකුණු වෙන වෙනම නිරීක්ෂණය කරන්න; අත් 12 අවසානයේ වැඩිම එකතුව ඇති අයා ජයගනී.",
+      howto_variant_multitable: "<strong>බහු-මේස තරඟාවලි</strong> — ක්‍රීඩකයින් 8ක් සිටින විට, ක්‍රීඩකයින් 4 බැගින් වූ මේස දෙකක් එකවර ක්‍රියාත්මක කරන්න, එක් එක් ක්‍රීඩකයා අනෙක් මේසයේ කෙනෙකු සමඟ යුගල කරන්න, සහ සියලුම අත් හරහා එක් එක් ක්‍රීඩකයාගේ ලකුණු එකතු කරන්න.",
+      howto_variant_challenge: "<strong>Challenge UNO</strong> — සෑම අතකදීම ජයග්‍රාහකයාට ලකුණු දීම වෙනුවට, සෑම ක්‍රීඩකයෙකුම අල්ලා ගැනුණු විට තිබූ කාඩ්වල ලකුණු එකතුවක් තබා ගන්න. නියමිත ඉලක්කයකට (ලකුණු 500 නිර්දේශිතයි) පැමිණි විට එම ක්‍රීඩකයා ක්‍රීඩාවෙන් ඉවත් වේ. දෙදෙනෙකු ඉතිරි වූ විට, ඉහත ක්‍රීඩකයින් දෙදෙනාගේ නීති අනුව මුහුණට මුහුණ ක්‍රීඩා කර අවසන් කරයි; මුලින්ම ඉලක්කයට පැමිණෙන අයා පරාද වන අතර, අනෙක් අයා ජයගනී."
+    }
+  };
+  function t(key, vars){
+    var dict = STRINGS[lang] || {};
+    var str = (key in dict) ? dict[key] : ((STRINGS.en && STRINGS.en[key]) || key);
+    if(vars){
+      Object.keys(vars).forEach(function(k){
+        str = str.split('{'+k+'}').join(vars[k]);
+      });
+    }
+    return str;
+  }
+  function applyStaticText(){
+    document.documentElement.lang = lang;
+    document.title = t('app_title');
+    document.querySelectorAll('[data-tkey]').forEach(function(elm){
+      elm.textContent = t(elm.dataset.tkey);
+    });
+  }
 
   var state = { players: [], matches: [], activeMatches: [], activeMatchId: null };
   var dataFilePath = '';
@@ -349,6 +613,8 @@ a{color:var(--accent);}
     overlay.hidden = false;
     var yesBtn = document.getElementById('modal-confirm-btn');
     var cancelBtn = document.getElementById('modal-cancel-btn');
+    yesBtn.textContent = t('modal_yes');
+    cancelBtn.textContent = t('modal_cancel');
     function cleanup(){
       overlay.hidden = true;
       yesBtn.removeEventListener('click', onYesClick);
@@ -377,11 +643,18 @@ a{color:var(--accent);}
       t.classList.add('active');
       document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
       document.getElementById('view-'+t.dataset.view).classList.add('active');
-      if(t.dataset.view==='players') renderPlayers();
-      if(t.dataset.view==='history') renderHistory();
-      if(t.dataset.view==='match') renderMatch();
+      renderActiveView(t.dataset.view);
     });
   });
+
+  function renderActiveView(view){
+    if(view==='players') renderPlayers();
+    if(view==='history') renderHistory();
+    if(view==='match') renderMatch();
+    if(view==='about') renderAbout();
+    if(view==='howto') renderHowTo();
+    if(view==='settings') renderSettings();
+  }
 
   // ================= PLAYERS =================
   function renderPlayers(){
@@ -390,31 +663,31 @@ a{color:var(--accent);}
       return '<div class="player-pill">' +
         '<span class="dot" style="background:'+colorFor(p.id)+'"></span>' +
         '<span>'+esc(p.name)+'</span>' +
-        '<button class="icon danger" data-remove-player="'+p.id+'" title="Remove player" aria-label="Remove '+esc(p.name)+'">✕</button>' +
+        '<button class="icon danger" data-remove-player="'+p.id+'" title="'+t('remove_player_title')+'" aria-label="'+t('remove_player_aria',{name:esc(p.name)})+'">✕</button>' +
         '</div>';
     }).join('');
 
     el.innerHTML =
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:18px;">Roster</h2><span class="muted">'+state.players.length+' player'+(state.players.length===1?'':'s')+'</span></div>' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('roster_heading')+'</h2><span class="muted">'+t('players_count',{n:state.players.length})+'</span></div>' +
         '<form id="add-player-form" class="row">' +
-          '<input type="text" id="new-player-name" class="grow" placeholder="Player name" maxlength="24" autocomplete="off">' +
-          '<button class="primary" type="submit">Add</button>' +
+          '<input type="text" id="new-player-name" class="grow" placeholder="'+t('player_name_placeholder')+'" maxlength="24" autocomplete="off">' +
+          '<button class="primary" type="submit">'+t('add_btn')+'</button>' +
         '</form>' +
-        (state.players.length ? '<div class="playerlist">'+rows+'</div>' : '<div class="empty">No players yet. Add at least 2 to start a match.</div>') +
+        (state.players.length ? '<div class="playerlist">'+rows+'</div>' : '<div class="empty">'+t('no_players_empty')+'</div>') +
       '</div>' +
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:15px;">Save data</h2></div>' +
-        '<div class="muted" style="margin-bottom:10px;word-break:break-all;">'+esc(dataFilePath || 'Loading…')+'</div>' +
-        '<div class="muted" style="margin-bottom:10px;">To move your players and match history to another PC, copy this file there (same path, after installing UNO Scoreboard) and overwrite the one it creates.</div>' +
-        '<button id="reveal-data-btn">Show in file manager</button>' +
+        '<div class="sectionhead"><h2 style="font-size:15px;">'+t('save_data_heading')+'</h2></div>' +
+        '<div class="muted" style="margin-bottom:10px;word-break:break-all;">'+esc(dataFilePath || t('save_data_loading'))+'</div>' +
+        '<div class="muted" style="margin-bottom:10px;">'+t('save_data_note')+'</div>' +
+        '<button id="reveal-data-btn">'+t('show_in_file_manager')+'</button>' +
       '</div>' +
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:15px;">Backup</h2></div>' +
-        '<div class="muted" style="margin-bottom:10px;">Save your players and match history to a backup file, or load one from another PC.</div>' +
+        '<div class="sectionhead"><h2 style="font-size:15px;">'+t('backup_heading')+'</h2></div>' +
+        '<div class="muted" style="margin-bottom:10px;">'+t('backup_note')+'</div>' +
         '<div class="row" style="gap:8px;flex-wrap:wrap;">' +
-          '<button id="export-backup-btn">Export backup…</button>' +
-          '<button id="import-backup-btn">Import backup…</button>' +
+          '<button id="export-backup-btn">'+t('export_backup_btn')+'</button>' +
+          '<button id="import-backup-btn">'+t('import_backup_btn')+'</button>' +
         '</div>' +
       '</div>';
 
@@ -427,8 +700,8 @@ a{color:var(--accent);}
     if(exportBackupBtn) exportBackupBtn.addEventListener('click', async function(){
       try{
         var result = await window.scoreboardAPI.exportBackup(JSON.stringify(state, null, 2));
-        if(result && result.ok) alert('Backup saved to:\n' + result.path);
-      }catch(e){ alert('Failed to export backup.'); }
+        if(result && result.ok) alert(t('backup_saved_to',{path:result.path}));
+      }catch(e){ alert(t('backup_export_failed')); }
     });
 
     var importBackupBtn = document.getElementById('import-backup-btn');
@@ -437,19 +710,19 @@ a{color:var(--accent);}
         var result = await window.scoreboardAPI.importBackup();
         if(!result || !result.ok) return;
         var parsed;
-        try{ parsed = JSON.parse(result.content); }catch(e){ alert('That file doesn\'t look like valid backup JSON.'); return; }
+        try{ parsed = JSON.parse(result.content); }catch(e){ alert(t('backup_invalid_json')); return; }
         if(!parsed || !Array.isArray(parsed.players) || !Array.isArray(parsed.matches)){
-          alert('That doesn\'t look like a UNO Scoreboard backup.');
+          alert(t('backup_invalid_format'));
           return;
         }
-        showConfirm('Replace all players and match history with the imported backup?', function(){
+        showConfirm(t('backup_replace_confirm'), function(){
           state = migrateState(parsed);
           save();
-          alert('Backup imported.');
+          alert(t('backup_imported'));
           renderPlayers();
           if(getActiveMatch()) renderMatch();
         });
-      }catch(e){ alert('Failed to import backup.'); }
+      }catch(e){ alert(t('backup_import_failed')); }
     });
 
     document.getElementById('add-player-form').addEventListener('submit', function(e){
@@ -458,7 +731,7 @@ a{color:var(--accent);}
       var name = inp.value.trim();
       if(!name) return;
       if(state.players.some(function(p){return p.name.toLowerCase()===name.toLowerCase();})){
-        inp.value=''; inp.placeholder='Name already exists'; return;
+        inp.value=''; inp.placeholder=t('name_exists_placeholder'); return;
       }
       state.players.push({id: uid(), name: name});
       save(); inp.value=''; renderPlayers();
@@ -470,7 +743,7 @@ a{color:var(--accent);}
         var id = btn.dataset.removePlayer;
         var inAnyActiveMatch = state.activeMatches.some(function(m){ return m.playerIds.includes(id); });
         if(inAnyActiveMatch){
-          alert('Cannot remove a player who is in an active match. Finish or discard that match first.');
+          alert(t('cannot_remove_active'));
           return;
         }
         state.players = state.players.filter(function(p){return p.id!==id;});
@@ -530,13 +803,13 @@ a{color:var(--accent);}
   function renderMatchSetup(el){
     var pausedList = state.activeMatches.length ?
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:18px;">Paused matches</h2><span class="muted">'+state.activeMatches.length+'</span></div>' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('paused_matches_heading')+'</h2><span class="muted">'+state.activeMatches.length+'</span></div>' +
         state.activeMatches.map(function(m){
           var names = m.playerIds.map(playerName).join(', ');
           return '<div class="hist-item" data-resume="'+m.id+'">' +
             '<div class="row" style="justify-content:space-between;align-items:center;">' +
-              '<div><div style="font-weight:600;">'+esc(names)+'</div><div class="muted">'+m.rounds.length+' round'+(m.rounds.length===1?'':'s')+' played</div></div>' +
-              '<button type="button" class="icon danger" data-discard-paused="'+m.id+'" title="Discard" aria-label="Discard paused match">✕</button>' +
+              '<div><div style="font-weight:600;">'+esc(names)+'</div><div class="muted">'+t('rounds_played_count',{n:m.rounds.length})+'</div></div>' +
+              '<button type="button" class="icon danger" data-discard-paused="'+m.id+'" title="'+t('discard_paused_title')+'" aria-label="'+t('discard_paused_aria')+'">✕</button>' +
             '</div>' +
           '</div>';
         }).join('') +
@@ -544,7 +817,7 @@ a{color:var(--accent);}
       : '';
 
     if(state.players.length < 2){
-      el.innerHTML = pausedList + '<div class="card"><div class="empty">Add at least 2 players on the <strong>Players</strong> tab to start a match.</div></div>';
+      el.innerHTML = pausedList + '<div class="card"><div class="empty">'+t('add_players_prompt')+'</div></div>';
       attachPausedListeners(el);
       return;
     }
@@ -558,20 +831,20 @@ a{color:var(--accent);}
 
     el.innerHTML = pausedList +
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:18px;">Start a match</h2></div>' +
-        '<div class="muted" style="margin-bottom:10px;">Pick who is playing.</div>' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('start_match_heading')+'</h2></div>' +
+        '<div class="muted" style="margin-bottom:10px;">'+t('pick_who_playing')+'</div>' +
         '<div class="playerlist" id="setup-checks">'+checks+'</div>' +
         '<div class="row" style="margin-top:16px;align-items:center;gap:8px;">' +
-          '<label for="win-limit-input" class="muted" style="margin:0;">Win at</label>' +
+          '<label for="win-limit-input" class="muted" style="margin:0;">'+t('win_at_label')+'</label>' +
           '<input type="number" id="win-limit-input" value="'+LIMIT+'" min="50" step="50" style="width:90px;">' +
-          '<span class="muted">pts</span>' +
+          '<span class="muted">'+t('pts_label')+'</span>' +
         '</div>' +
         '<div class="row" style="margin-top:16px;">' +
-          '<button type="button" id="toss-btn">🎲 Pick Dealer</button>' +
+          '<button type="button" id="toss-btn">'+t('pick_dealer_btn')+'</button>' +
         '</div>' +
         '<div id="toss-result"></div>' +
         '<div class="row" style="margin-top:16px;">' +
-          '<button class="primary grow" id="start-match-btn">Start Match</button>' +
+          '<button class="primary grow" id="start-match-btn">'+t('start_match_btn')+'</button>' +
         '</div>' +
       '</div>';
     attachPausedListeners(el);
@@ -584,15 +857,15 @@ a{color:var(--accent);}
       tossResultEl.innerHTML =
         '<div class="toss-result">' +
           '<span class="dot" style="background:'+colorFor(tossPick)+';"></span>' +
-          '<span>🎉 <strong>'+esc(playerName(tossPick))+'</strong> is the dealer!</span>' +
-          '<button type="button" class="icon" id="retoss-btn">Pick again</button>' +
+          '<span>'+t('dealer_announcement',{name:esc(playerName(tossPick))})+'</span>' +
+          '<button type="button" class="icon" id="retoss-btn">'+t('pick_again_btn')+'</button>' +
         '</div>';
       tossResultEl.querySelector('#retoss-btn').addEventListener('click', doToss);
     }
 
     function doToss(){
       var ids = Array.from(el.querySelectorAll('#setup-checks input:checked')).map(function(c){return c.value;});
-      if(ids.length < 2){ alert('Select at least 2 players first.'); return; }
+      if(ids.length < 2){ alert(t('select_2_first')); return; }
       tossPick = ids[Math.floor(Math.random() * ids.length)];
       renderTossResult();
     }
@@ -606,7 +879,7 @@ a{color:var(--accent);}
 
     el.querySelector('#start-match-btn').addEventListener('click', function(){
       var ids = Array.from(el.querySelectorAll('#setup-checks input:checked')).map(function(c){return c.value;});
-      if(ids.length < 2){ alert('Select at least 2 players.'); return; }
+      if(ids.length < 2){ alert(t('select_2')); return; }
       var firstPlayerId = (tossPick && ids.includes(tossPick)) ? tossPick : null;
       var winLimitInput = parseInt(el.querySelector('#win-limit-input').value, 10);
       var winLimit = (!isNaN(winLimitInput) && winLimitInput >= 50) ? winLimitInput : LIMIT;
@@ -629,7 +902,7 @@ a{color:var(--accent);}
       btn.addEventListener('click', function(e){
         e.stopPropagation();
         var id = btn.dataset.discardPaused;
-        showConfirm('Discard this paused match? This cannot be undone.', function(){
+        showConfirm(t('discard_paused_confirm'), function(){
           state.activeMatches = state.activeMatches.filter(function(m){ return m.id!==id; });
           save(); renderMatch();
         });
@@ -657,8 +930,8 @@ a{color:var(--accent);}
 
     var banner = '';
     if(finished){
-      banner = '<div class="banner">🏆 '+esc(playerName(winnerId))+' wins the match, first to '+winLimit+' with '+totals[winnerId]+' points!' +
-        '<button id="save-match-btn">Save &amp; New Match</button></div>';
+      banner = '<div class="banner">'+t('match_win_banner',{name:esc(playerName(winnerId)),limit:winLimit,points:totals[winnerId]})+
+        '<button id="save-match-btn">'+t('save_new_match_btn')+'</button></div>';
     }
 
     var roundRows = match.rounds.map(function(round, idx){
@@ -670,48 +943,48 @@ a{color:var(--accent);}
         '<td>'+(idx+1)+'</td>' +
         '<td><span class="dot" style="background:'+(winnerOfRound?colorFor(winnerOfRound):'transparent')+';display:inline-block;margin-right:5px;vertical-align:middle;"></span>'+(winnerOfRound?esc(playerName(winnerOfRound)):'—')+'</td>' +
         '<td class="num">'+pts+'</td>' +
-        '<td class="num">'+(toGo===null?'—':(toGo>0?'<span class="running">('+toGo+' to go)</span>':'<span class="running">(reached '+winLimit+')</span>'))+'</td>' +
-        '<td><button class="icon danger" data-del-round="'+idx+'" '+(finished?'disabled':'')+' aria-label="Delete round '+(idx+1)+'">✕</button></td>' +
+        '<td class="num">'+(toGo===null?'—':(toGo>0?'<span class="running">'+t('to_go',{n:toGo})+'</span>':'<span class="running">'+t('reached_limit',{limit:winLimit})+'</span>'))+'</td>' +
+        '<td><button class="icon danger" data-del-round="'+idx+'" '+(finished?'disabled':'')+' aria-label="'+t('delete_round_aria',{n:idx+1})+'">✕</button></td>' +
       '</tr>';
     }).join('');
 
     var roundsTable = match.rounds.length ?
       '<div style="overflow-x:auto;"><table>' +
-        '<tr><th>Round</th><th>Winner</th><th class="num">Points</th><th class="num">Remaining</th><th></th></tr>' +
+        '<tr><th>'+t('col_round')+'</th><th>'+t('col_winner')+'</th><th class="num">'+t('col_points')+'</th><th class="num">'+t('col_remaining')+'</th><th></th></tr>' +
         roundRows +
       '</table></div>'
-      : '<div class="empty">No rounds yet. Add the first round below.</div>';
+      : '<div class="empty">'+t('no_rounds_empty')+'</div>';
 
     var winnerEntryBlocks = match.playerIds.map(function(id){
       var tallyBtn = finished ? '' :
-        '<button type="button" class="icon tally-toggle-btn" data-player="'+id+'" title="Tally cards" aria-label="Tally cards for '+esc(playerName(id))+'">🧮</button>';
+        '<button type="button" class="icon tally-toggle-btn" data-player="'+id+'" title="'+t('tally_cards_title')+'" aria-label="'+t('tally_cards_aria',{name:esc(playerName(id))})+'">🧮</button>';
       var tallyPanel = finished ? '' :
         '<div class="tally-panel" id="tally-panel-'+id+'" hidden data-subtotal="0" data-history="[]" data-entered="0" data-locked="0">' +
           '<div class="tally-display-row">' +
-            '<button type="button" class="icon tally-backspace-btn" title="Backspace" aria-label="Backspace">⌫</button>' +
+            '<button type="button" class="icon tally-backspace-btn" title="'+t('backspace_title')+'" aria-label="'+t('backspace_aria')+'">⌫</button>' +
             '<div class="tally-display">0</div>' +
           '</div>' +
           '<div class="tally-keypad">' +
             [7,8,9,4,5,6,1,2,3].map(function(n){
               return '<button type="button" class="tally-key-btn" data-digit="'+n+'">'+n+'</button>';
             }).join('') +
-            '<button type="button" class="tally-card-btn tally-value-btn" data-value="20"><span class="tally-btn-title">Skip/Rev/D2</span><span class="tally-btn-pts">20</span></button>' +
+            '<button type="button" class="tally-card-btn tally-value-btn" data-value="20"><span class="tally-btn-title">'+t('skiprevd2_label')+'</span><span class="tally-btn-pts">20</span></button>' +
             '<button type="button" class="tally-key-btn" data-digit="0">0</button>' +
-            '<button type="button" class="tally-card-btn tally-value-btn" data-value="50"><span class="tally-btn-title">Wild</span><span class="tally-btn-pts">50</span></button>' +
+            '<button type="button" class="tally-card-btn tally-value-btn" data-value="50"><span class="tally-btn-title">'+t('wild_label')+'</span><span class="tally-btn-pts">50</span></button>' +
           '</div>' +
           '<button type="button" class="tally-commit-btn tally-commit-wide">+</button>' +
           '<div class="muted tally-history-display">—</div>' +
           '<div class="row" style="justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:8px;">' +
-            '<div class="muted">Tally: <strong class="tally-subtotal">0</strong></div>' +
+            '<div class="muted">'+t('tally_label')+' <strong class="tally-subtotal">0</strong></div>' +
             '<div class="row" style="gap:6px;">' +
-              '<button type="button" class="icon tally-undo-btn">Undo</button>' +
-              '<button type="button" class="icon tally-close-btn">Close</button>' +
-              '<button type="button" class="primary tally-add-btn">Add to score</button>' +
+              '<button type="button" class="icon tally-undo-btn">'+t('undo_btn')+'</button>' +
+              '<button type="button" class="icon tally-close-btn">'+t('close_btn')+'</button>' +
+              '<button type="button" class="primary tally-add-btn">'+t('add_to_score_btn')+'</button>' +
             '</div>' +
           '</div>' +
         '</div>';
       return '<div class="winner-entry" data-player="'+id+'" hidden>' +
-        '<div class="muted" style="margin-bottom:8px;">How many points did '+esc(playerName(id))+' score? <span style="opacity:.8;">(usually the value of every other player\'s remaining cards)</span></div>' +
+        '<div class="muted" style="margin-bottom:8px;">'+t('how_many_points_question',{name:esc(playerName(id))})+'</div>' +
         '<div class="row" style="justify-content:space-between;align-items:baseline;gap:6px;">' +
           '<label class="field" style="margin-bottom:0;">'+esc(playerName(id))+'</label>' +
           tallyBtn +
@@ -724,24 +997,24 @@ a{color:var(--accent);}
     el.innerHTML =
       banner +
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:18px;">Totals</h2><span class="muted">Win at: '+winLimit+' pts · '+match.rounds.length+' round'+(match.rounds.length===1?'':'s')+' played</span></div>' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('totals_heading')+'</h2><span class="muted">'+t('win_at_rounds_summary',{limit:winLimit,n:match.rounds.length})+'</span></div>' +
         '<div class="totals-bar">'+tiles+'</div>' +
-        (match.firstPlayerId ? '<div class="muted first-move-line">🎲 Dealer: '+esc(playerName(match.firstPlayerId))+'</div>' : '') +
+        (match.firstPlayerId ? '<div class="muted first-move-line">'+t('dealer_label',{name:esc(playerName(match.firstPlayerId))})+'</div>' : '') +
       '</div>' +
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:18px;">Rounds</h2>' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('rounds_heading')+'</h2>' +
           '<div class="row" style="gap:6px;flex-wrap:wrap;">' +
-            (finished ? '' : '<button type="button" id="pause-match-btn">⏸ Pause</button>') +
-            (finished ? '' : '<button type="button" class="primary" id="finish-match-btn">🏁 Finish</button>') +
-            '<button class="danger" id="discard-match-btn">Discard match</button>' +
+            (finished ? '' : '<button type="button" id="pause-match-btn">'+t('pause_btn')+'</button>') +
+            (finished ? '' : '<button type="button" class="primary" id="finish-match-btn">'+t('finish_btn')+'</button>') +
+            '<button class="danger" id="discard-match-btn">'+t('discard_match_btn')+'</button>' +
           '</div>' +
         '</div>' +
         roundsTable +
       '</div>' +
       (finished ? '' :
       '<div class="card">' +
-        '<h2 style="font-size:16px;margin-bottom:10px;">Add round '+(match.rounds.length+1)+'</h2>' +
-        '<div class="muted" style="margin-bottom:6px;">Who won this round?</div>' +
+        '<h2 style="font-size:16px;margin-bottom:10px;">'+t('add_round_heading',{n:match.rounds.length+1})+'</h2>' +
+        '<div class="muted" style="margin-bottom:6px;">'+t('who_won_question')+'</div>' +
         '<div class="playerlist" id="round-winner-picks" style="margin-bottom:14px;">' +
           match.playerIds.map(function(id){
             return '<label class="player-pill" style="cursor:pointer;">' +
@@ -753,7 +1026,7 @@ a{color:var(--accent);}
         '</div>' +
         winnerEntryBlocks +
         '<div class="row" style="margin-top:14px;" id="add-round-row" hidden>' +
-          '<button class="primary grow" id="add-round-btn">Add Round</button>' +
+          '<button class="primary grow" id="add-round-btn">'+t('add_round_btn')+'</button>' +
         '</div>' +
       '</div>');
 
@@ -921,7 +1194,7 @@ a{color:var(--accent);}
 
     var discardBtn = el.querySelector('#discard-match-btn');
     if(discardBtn) discardBtn.addEventListener('click', function(){
-      showConfirm('Discard this match? This cannot be undone.', function(){
+      showConfirm(t('discard_match_confirm'), function(){
         state.activeMatches = state.activeMatches.filter(function(m){ return m.id!==match.id; });
         state.activeMatchId = null;
         save(); renderMatch();
@@ -936,7 +1209,7 @@ a{color:var(--accent);}
 
     var finishBtn = el.querySelector('#finish-match-btn');
     if(finishBtn) finishBtn.addEventListener('click', function(){
-      showConfirm('Finish this match now? The current top scorer will be declared the winner.', function(){
+      showConfirm(t('finish_match_confirm'), function(){
         var best = match.playerIds[0];
         match.playerIds.forEach(function(id){ if(totals[id] > totals[best]) best = id; });
         match.finished = true;
@@ -975,7 +1248,7 @@ a{color:var(--accent);}
       return;
     }
     if(!state.matches.length){
-      el.innerHTML = '<div class="card"><div class="empty">No finished matches yet. Play a match to see it here.</div></div>';
+      el.innerHTML = '<div class="card"><div class="empty">'+t('no_matches_empty')+'</div></div>';
       return;
     }
     var rows = state.matches.map(function(m){
@@ -989,19 +1262,19 @@ a{color:var(--accent);}
           '</div>' +
           '<div style="text-align:right;">' +
             '<div class="muted">'+date.toLocaleDateString()+'</div>' +
-            '<div class="muted">'+m.rounds.length+' rounds</div>' +
+            '<div class="muted">'+t('rounds_count',{n:m.rounds.length})+'</div>' +
           '</div>' +
-          '<button class="icon danger" data-delete-match="'+m.id+'" title="Delete match" aria-label="Delete match">✕</button>' +
+          '<button class="icon danger" data-delete-match="'+m.id+'" title="'+t('delete_match_title')+'" aria-label="'+t('delete_match_aria')+'">✕</button>' +
         '</div>' +
       '</div>';
     }).join('');
-    el.innerHTML = '<div class="sectionhead"><h2 style="font-size:18px;">Match history</h2><span class="muted">'+state.matches.length+' finished</span></div>' + rows;
+    el.innerHTML = '<div class="sectionhead"><h2 style="font-size:18px;">'+t('match_history_heading')+'</h2><span class="muted">'+t('finished_count',{n:state.matches.length})+'</span></div>' + rows;
 
     el.querySelectorAll('[data-delete-match]').forEach(function(btn){
       btn.addEventListener('click', function(e){
         e.stopPropagation();
         var id = btn.dataset.deleteMatch;
-        showConfirm('Delete this match from history?', function(){
+        showConfirm(t('delete_match_confirm'), function(){
           state.matches = state.matches.filter(function(x){return x.id!==id;});
           save(); renderHistory();
         });
@@ -1038,34 +1311,154 @@ a{color:var(--accent);}
         '<td>'+(idx+1)+'</td>' +
         '<td><span class="dot" style="background:'+(winnerOfRound?colorFor(winnerOfRound):'transparent')+';display:inline-block;margin-right:5px;vertical-align:middle;"></span>'+(winnerOfRound?esc(playerName(winnerOfRound)):'—')+'</td>' +
         '<td class="num">'+pts+'</td>' +
-        '<td class="num">'+(toGo===null?'—':(toGo>0?'<span class="running">('+toGo+' to go)</span>':'<span class="running">(reached '+historyWinLimit+')</span>'))+'</td>' +
+        '<td class="num">'+(toGo===null?'—':(toGo>0?'<span class="running">'+t('to_go',{n:toGo})+'</span>':'<span class="running">'+t('reached_limit',{limit:historyWinLimit})+'</span>'))+'</td>' +
       '</tr>';
     }).join('');
     var date = new Date(m.finishedAt || m.startedAt);
 
     el.innerHTML =
-      '<button class="back" id="back-to-list">← All matches</button>' +
+      '<button class="back" id="back-to-list">'+t('back_to_all')+'</button>' +
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:18px;">Match on '+date.toLocaleDateString()+'</h2>' +
-          '<button class="danger" id="delete-match-btn">Delete</button>' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('match_on_date',{date:date.toLocaleDateString()})+'</h2>' +
+          '<button class="danger" id="delete-match-btn">'+t('delete_btn')+'</button>' +
         '</div>' +
         '<div class="totals-bar">'+tiles+'</div>' +
-        (m.firstPlayerId ? '<div class="muted first-move-line">🎲 Dealer: '+esc(playerName(m.firstPlayerId))+'</div>' : '') +
+        (m.firstPlayerId ? '<div class="muted first-move-line">'+t('dealer_label',{name:esc(playerName(m.firstPlayerId))})+'</div>' : '') +
       '</div>' +
       '<div class="card">' +
-        '<h3 style="font-size:15px;margin-bottom:10px;">Rounds</h3>' +
+        '<h3 style="font-size:15px;margin-bottom:10px;">'+t('rounds_subheading')+'</h3>' +
         '<div style="overflow-x:auto;"><table>' +
-          '<tr><th>Round</th><th>Winner</th><th class="num">Points</th><th class="num">Remaining</th></tr>' +
+          '<tr><th>'+t('col_round')+'</th><th>'+t('col_winner')+'</th><th class="num">'+t('col_points')+'</th><th class="num">'+t('col_remaining')+'</th></tr>' +
           roundRows +
         '</table></div>' +
       '</div>';
 
     el.querySelector('#back-to-list').addEventListener('click', function(){ historyDetailId=null; renderHistory(); });
     el.querySelector('#delete-match-btn').addEventListener('click', function(){
-      showConfirm('Delete this match from history?', function(){
+      showConfirm(t('delete_match_confirm'), function(){
         state.matches = state.matches.filter(function(x){return x.id!==matchId;});
         historyDetailId = null;
         save(); renderHistory();
+      });
+    });
+  }
+
+  // ================= ABOUT =================
+  function renderAbout(){
+    var el = document.getElementById('view-about');
+    el.innerHTML =
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('about_app_name')+'</h2><span class="muted">v1.9.1</span></div>' +
+        '<div class="muted">'+t('about_description')+'</div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('contact_heading')+'</h2></div>' +
+        '<div class="muted">'+t('contact_text')+'</div>' +
+        '<div style="margin-top:8px;">'+t('email_label')+' <a href="mailto:dinukad@hotmail.com">dinukad@hotmail.com</a></div>' +
+        '<div>'+t('phone_label')+' <a href="tel:+94712207187">+94 71 220 7187</a></div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('credits_heading')+'</h2></div>' +
+        '<div class="muted">'+t('credits_text')+'</div>' +
+      '</div>';
+  }
+
+  // ================= HOW TO PLAY =================
+  function renderHowTo(){
+    var el = document.getElementById('view-howto');
+    el.innerHTML =
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('howto_object_heading')+'</h2></div>' +
+        '<div class="muted">'+t('howto_object_text')+'</div>' +
+      '</div>' +
+
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('howto_deck_heading')+'</h2></div>' +
+        '<div class="muted">'+t('howto_deck_text')+'</div>' +
+      '</div>' +
+
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('howto_setup_heading')+'</h2></div>' +
+        '<div class="muted">'+t('howto_setup_text')+'</div>' +
+      '</div>' +
+
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('howto_turn_heading')+'</h2></div>' +
+        '<div class="muted">'+t('howto_turn_text')+'</div>' +
+      '</div>' +
+
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('howto_special_heading')+'</h2></div>' +
+        '<table>' +
+          '<tr><th>'+t('howto_col_card')+'</th><th>'+t('howto_col_effect')+'</th></tr>' +
+          '<tr><td>'+t('howto_skip_name')+'</td><td>'+t('howto_skip_effect')+'</td></tr>' +
+          '<tr><td>'+t('howto_reverse_name')+'</td><td>'+t('howto_reverse_effect')+'</td></tr>' +
+          '<tr><td>'+t('howto_draw2_name')+'</td><td>'+t('howto_draw2_effect')+'</td></tr>' +
+          '<tr><td>'+t('howto_wild_name')+'</td><td>'+t('howto_wild_effect')+'</td></tr>' +
+          '<tr><td>'+t('howto_wild4_name')+'</td><td>'+t('howto_wild4_effect')+'</td></tr>' +
+        '</table>' +
+      '</div>' +
+
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('howto_uno_heading')+'</h2></div>' +
+        '<div class="muted">'+t('howto_uno_text')+'</div>' +
+      '</div>' +
+
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('howto_scoring_heading')+'</h2></div>' +
+        '<table>' +
+          '<tr><th>'+t('howto_scoring_col_cards')+'</th><th>'+t('howto_scoring_col_points')+'</th></tr>' +
+          '<tr><td>'+t('howto_scoring_number_label')+'</td><td class="num">'+t('howto_scoring_number_value')+'</td></tr>' +
+          '<tr><td>'+t('howto_scoring_srdlabel')+'</td><td class="num">'+t('howto_scoring_20each')+'</td></tr>' +
+          '<tr><td>'+t('howto_scoring_wildlabel')+'</td><td class="num">'+t('howto_scoring_50each')+'</td></tr>' +
+        '</table>' +
+        '<div class="muted" style="margin-top:8px;">'+t('howto_scoring_note1')+'</div>' +
+        '<div class="muted" style="margin-top:8px;">'+t('howto_scoring_note2')+'</div>' +
+      '</div>' +
+
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('howto_winning_heading')+'</h2></div>' +
+        '<div class="muted">'+t('howto_winning_text')+'</div>' +
+      '</div>' +
+
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('howto_blank_heading')+'</h2></div>' +
+        '<div class="muted">'+t('howto_blank_text')+'</div>' +
+      '</div>' +
+
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('howto_variants_heading')+'</h2></div>' +
+        '<div class="muted" style="margin-bottom:10px;">'+t('howto_variants_intro')+'</div>' +
+        '<div style="display:flex;flex-direction:column;gap:10px;">' +
+          '<div>'+t('howto_variant_two_players')+'</div>' +
+          '<div>'+t('howto_variant_partners')+'</div>' +
+          '<div>'+t('howto_variant_rotating')+'</div>' +
+          '<div>'+t('howto_variant_multitable')+'</div>' +
+          '<div>'+t('howto_variant_challenge')+'</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  // ================= SETTINGS =================
+  function renderSettings(){
+    var el = document.getElementById('view-settings');
+    el.innerHTML =
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('language_heading')+'</h2></div>' +
+        '<div class="muted" style="margin-bottom:10px;">'+t('language_note')+'</div>' +
+        '<div class="row" style="gap:8px;flex-wrap:wrap;">' +
+          '<button type="button" class="'+(lang==='en'?'primary':'')+'" data-lang="en">'+t('language_en')+'</button>' +
+          '<button type="button" class="'+(lang==='si'?'primary':'')+'" data-lang="si">'+t('language_si')+'</button>' +
+        '</div>' +
+      '</div>';
+
+    el.querySelectorAll('[data-lang]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        setLang(btn.dataset.lang);
+        applyStaticText();
+        renderSettings();
+        var activeTab = document.querySelector('.tab.active');
+        if(activeTab) renderActiveView(activeTab.dataset.view);
       });
     });
   }
@@ -1078,6 +1471,7 @@ a{color:var(--accent);}
       state.players = [{id:uid(), name:'Player 1'}, {id:uid(), name:'Player 2'}];
     }
     save();
+    applyStaticText();
     renderMatch();
   })();
 })();
