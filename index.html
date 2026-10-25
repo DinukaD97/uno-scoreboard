@@ -259,6 +259,55 @@ a{color:var(--accent);}
   var THEME_KEY = 'uno-scoreboard-theme';
   var theme = (function(){ try{ return localStorage.getItem(THEME_KEY) || 'dark'; }catch(e){ return 'dark'; } })();
   function setTheme(th){ theme = th; try{ localStorage.setItem(THEME_KEY, th); }catch(e){} document.documentElement.dataset.theme = th; }
+
+  var SOUND_ROUND_KEY = 'uno-scoreboard-sound-round';
+  var SOUND_WIN_KEY = 'uno-scoreboard-sound-win';
+  var SOUND_MUTE_KEY = 'uno-scoreboard-sound-muted';
+  function loadBoolPref(key, dflt){ try{ var v = localStorage.getItem(key); return v===null ? dflt : v==='1'; }catch(e){ return dflt; } }
+  function saveBoolPref(key, val){ try{ localStorage.setItem(key, val ? '1' : '0'); }catch(e){} }
+  var soundRoundOn = loadBoolPref(SOUND_ROUND_KEY, true);
+  var soundWinOn = loadBoolPref(SOUND_WIN_KEY, true);
+  var soundMuted = loadBoolPref(SOUND_MUTE_KEY, false);
+  function setSoundRound(on){ soundRoundOn = on; saveBoolPref(SOUND_ROUND_KEY, on); }
+  function setSoundWin(on){ soundWinOn = on; saveBoolPref(SOUND_WIN_KEY, on); }
+  function setSoundMuted(on){ soundMuted = on; saveBoolPref(SOUND_MUTE_KEY, on); }
+
+  var audioCtx = null;
+  function getAudioCtx(){
+    if(!audioCtx){
+      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ return null; }
+    }
+    if(audioCtx.state === 'suspended'){ try{ audioCtx.resume(); }catch(e){} }
+    return audioCtx;
+  }
+  function playTone(ctx, freq, startTime, duration, type, peakGain){
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.linearRampToValueAtTime(peakGain, startTime + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.03);
+  }
+  function playRoundSound(){
+    if(soundMuted || !soundRoundOn) return;
+    var ctx = getAudioCtx(); if(!ctx) return;
+    var t0 = ctx.currentTime;
+    playTone(ctx, 880, t0, 0.12, 'sine', 0.18);
+    playTone(ctx, 1320, t0 + 0.06, 0.12, 'sine', 0.14);
+  }
+  function playWinSound(){
+    if(soundMuted || !soundWinOn) return;
+    var ctx = getAudioCtx(); if(!ctx) return;
+    var t0 = ctx.currentTime;
+    [523.25, 659.25, 783.99, 1046.5].forEach(function(freq, i){
+      playTone(ctx, freq, t0 + i*0.09, 0.3, 'triangle', 0.2);
+    });
+  }
   var STRINGS = {
     en: {
       app_title: "UNO Scoreboard",
@@ -379,6 +428,12 @@ a{color:var(--accent);}
       theme_light: "Light",
       theme_dark: "Dark",
       theme_system: "System Default",
+      sound_heading: "Sound",
+      sound_note: "Choose when the app plays a sound.",
+      sound_round_label: "🔊 Round added",
+      sound_win_label: "🏆 Match won",
+      sound_on_label: "🔊 On",
+      sound_off_label: "🔇 Off",
 
       howto_object_heading: "Object",
       howto_object_text: "Be the first to play every card in your hand each round. When a round ends, you score points based on the cards left in your opponents' hands. First player to reach <strong>500 points</strong> wins the match — this app's Totals and History track that automatically.",
@@ -545,6 +600,12 @@ a{color:var(--accent);}
       theme_light: "දීප්තිමත්",
       theme_dark: "අඳුරු",
       theme_system: "උපාංගයේ සැකසුමට අනුව",
+      sound_heading: "ශබ්දය",
+      sound_note: "යෙදුම ශබ්දය වාදනය කරන අවස්ථා තෝරන්න.",
+      sound_round_label: "🔊 වටයක් එකතු වූ විට",
+      sound_win_label: "🏆 සෙල්ලම ජයගත් විට",
+      sound_on_label: "🔊 විවෘතයි",
+      sound_off_label: "🔇 වසා ඇත",
 
       howto_object_heading: "අරමුණ",
       howto_object_text: "සෑම වටයක ම ඔබේ අතේ ඇති සියලු ම කාඩ් සෙල්ලම් කර මුලින්ම ඉවර කරන්න. වටයක් අවසන් වූ විට, අනෙක් අයගේ අතේ ඉතිරි කාඩ් අනුව ඔබට ලකුණු ලැබේ. මුලින් ම <strong>ලකුණු 500</strong> ලබා ගන්නා කෙනා ජය ගනී. — මෙම යෙදුම මඟින් එම එකතුව සහ ඉතිහාසය ස්වයංක්‍රීයව සටහන් කර ගනියි.",
@@ -1093,7 +1154,10 @@ a{color:var(--accent);}
         var pts = isNaN(v) ? 0 : v;
         var scores = {};
         match.playerIds.forEach(function(id){ scores[id] = (id===winnerId) ? pts : 0; });
+        var wasWinner = matchWinner(match);
         match.rounds.push({ scores: scores, winnerId: winnerId });
+        var nowWinner = matchWinner(match);
+        if(nowWinner && !wasWinner){ playWinSound(); } else { playRoundSound(); }
         save(); renderMatch();
       });
 
@@ -1263,6 +1327,7 @@ a{color:var(--accent);}
         state.matches.unshift(match);
         state.activeMatches = state.activeMatches.filter(function(m){ return m.id!==match.id; });
         state.activeMatchId = null;
+        playWinSound();
         save();
         renderMatch();
       });
@@ -1503,6 +1568,16 @@ a{color:var(--accent);}
           '<button type="button" class="'+(theme==='dark'?'primary':'')+'" data-theme-choice="dark">'+t('theme_dark')+'</button>' +
           '<button type="button" class="'+(theme==='system'?'primary':'')+'" data-theme-choice="system">'+t('theme_system')+'</button>' +
         '</div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('sound_heading')+'</h2>' +
+          '<button type="button" class="'+(soundMuted?'':'primary')+'" data-sound-master>'+(soundMuted?t('sound_off_label'):t('sound_on_label'))+'</button>' +
+        '</div>' +
+        '<div class="muted" style="margin-bottom:10px;">'+t('sound_note')+'</div>' +
+        '<div class="row" style="gap:8px;flex-wrap:wrap;'+(soundMuted?'opacity:.45;pointer-events:none;':'')+'">' +
+          '<button type="button" class="'+(soundRoundOn?'primary':'')+'" data-sound-toggle="round">'+t('sound_round_label')+'</button>' +
+          '<button type="button" class="'+(soundWinOn?'primary':'')+'" data-sound-toggle="win">'+t('sound_win_label')+'</button>' +
+        '</div>' +
       '</div>';
 
     el.querySelectorAll('[data-lang]').forEach(function(btn){
@@ -1520,6 +1595,20 @@ a{color:var(--accent);}
         setTheme(btn.dataset.themeChoice);
         renderSettings();
       });
+    });
+
+    el.querySelectorAll('[data-sound-toggle]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if(btn.dataset.soundToggle === 'round'){ setSoundRound(!soundRoundOn); }
+        else{ setSoundWin(!soundWinOn); }
+        renderSettings();
+      });
+    });
+
+    var soundMasterBtn = el.querySelector('[data-sound-master]');
+    if(soundMasterBtn) soundMasterBtn.addEventListener('click', function(){
+      setSoundMuted(!soundMuted);
+      renderSettings();
     });
   }
 
