@@ -22,6 +22,38 @@
   color-scheme: dark;
 }
 
+:root[data-theme="light"]{
+  --bg:#f5f4f0;
+  --surface:#ffffff;
+  --surface2:#ececE8;
+  --line:#d9d8d3;
+  --text:#1c1c1d;
+  --muted:#68686c;
+  --accent:#c98a00;
+  --accent-ink:#241a00;
+  --danger:#c42a1e;
+  --good:#238a44;
+  --blue:#2458c4;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light){
+  :root[data-theme="system"]{
+    --bg:#f5f4f0;
+    --surface:#ffffff;
+    --surface2:#ececE8;
+    --line:#d9d8d3;
+    --text:#1c1c1d;
+    --muted:#68686c;
+    --accent:#c98a00;
+    --accent-ink:#241a00;
+    --danger:#c42a1e;
+    --good:#238a44;
+    --blue:#2458c4;
+    color-scheme: light;
+  }
+}
+
 *{box-sizing:border-box;}
 html,body{height:100%;}
 body{
@@ -185,7 +217,6 @@ a{color:var(--accent);}
 
 <div class="wrap">
   <h1 data-tkey="app_title">UNO Scoreboard</h1>
-  <div class="tagline" data-tkey="app_tagline">Players, rounds, and running totals — first to 500 wins.</div>
 
   <div class="tabs">
     <button class="tab active" data-view="match" data-tkey="tab_match">Current Match</button>
@@ -224,10 +255,13 @@ a{color:var(--accent);}
   var LANG_KEY = 'uno-scoreboard-lang';
   var lang = (function(){ try{ return localStorage.getItem(LANG_KEY) || 'en'; }catch(e){ return 'en'; } })();
   function setLang(l){ lang = l; try{ localStorage.setItem(LANG_KEY, l); }catch(e){} }
+
+  var THEME_KEY = 'uno-scoreboard-theme';
+  var theme = (function(){ try{ return localStorage.getItem(THEME_KEY) || 'dark'; }catch(e){ return 'dark'; } })();
+  function setTheme(th){ theme = th; try{ localStorage.setItem(THEME_KEY, th); }catch(e){} document.documentElement.dataset.theme = th; }
   var STRINGS = {
     en: {
       app_title: "UNO Scoreboard",
-      app_tagline: "Players, rounds, and running totals — first to 500 wins.",
       tab_match: "Current Match",
       tab_players: "Players",
       tab_history: "History",
@@ -340,6 +374,11 @@ a{color:var(--accent);}
       language_note: "Choose the app's display language.",
       language_en: "English",
       language_si: "Sinhala (සිංහල)",
+      theme_heading: "Theme",
+      theme_note: "Choose how the app looks.",
+      theme_light: "Light",
+      theme_dark: "Dark",
+      theme_system: "System Default",
 
       howto_object_heading: "Object",
       howto_object_text: "Be the first to play every card in your hand each round. When a round ends, you score points based on the cards left in your opponents' hands. First player to reach <strong>500 points</strong> wins the match — this app's Totals and History track that automatically.",
@@ -389,7 +428,6 @@ a{color:var(--accent);}
     },
     si: {
       app_title: "UNO ලකුණු පුවරුව",
-      app_tagline: "ක්‍රීඩකයින්, වට, සහ ලකුණු එකතුව — මුලින්ම ලකුණු 500ට යන අය ජයග්‍රහණය කරයි.",
       tab_match: "වත්මන් ක්‍රීඩාව",
       tab_players: "ක්‍රීඩකයින්",
       tab_history: "ඉතිහාසය",
@@ -475,7 +513,7 @@ a{color:var(--accent);}
 
       match_history_heading: "ක්‍රීඩා ඉතිහාසය",
       finished_count: "අවසන් වූ: {n}",
-      no_matches_empty: "තවම අවසන් වූ ක්‍රීඩා නැත. ක්‍රීඩාවක් සෙල්ලම් කර මෙහි බලන්න.",
+      no_matches_empty: "තව ම මෙම යෙදුම මඟින් නිශ්විත ව අවසන් වන පරිදි සෙල්ලමක් සිදු කර නොමැත. සෙල්ලමක් අවසන් වන තෙක් සෙල්ලම් කර මෙහි බලන්න.",
       delete_match_title: "ක්‍රීඩාව මකන්න",
       delete_match_aria: "ක්‍රීඩාව මකන්න",
       rounds_count: "වට {n}",
@@ -489,7 +527,7 @@ a{color:var(--accent);}
       modal_yes: "ඔව්",
 
       about_app_name: "UNO ලකුණු පුවරුව",
-      about_description: "UNO ක්‍රීඩා සඳහා ක්‍රීඩකයින්, වට, සහ ලකුණු එකතුව නිරීක්ෂණය කිරීමට UNO ලකුණු පුවරුව උපකාර වේ — මුලින්ම ලකුණු 500ට යන අය ජයග්‍රහණය කරයි.",
+      about_description: "UNO සෙල්ලමේ ක්‍රීඩකයින්, වට, සහ ලකුණු එකතුව සටහන් කිරීමට සහ පෙර සෙල්ලම් කළ තරඟ ඉතිහාසය මතක තබා ගැනීමට මෙම UNO ලකුණු පුවරුව උපකාර වේ.",
       contact_heading: "සම්බන්ධ වන්න",
       contact_text: "ප්‍රශ්න හෝ අදහස් තිබේද? අමතන්න:",
       email_label: "විද්‍යුත් තැපෑල:",
@@ -499,55 +537,60 @@ a{color:var(--accent);}
 
       settings_heading: "සැකසුම්",
       language_heading: "භාෂාව",
-      language_note: "යෙදුමේ භාෂාව තෝරන්න.",
+      language_note: "භාෂාව තෝරන්න.",
       language_en: "English",
       language_si: "සිංහල",
+      theme_heading: "තේමාව",
+      theme_note: "යෙදුම පෙනෙන ආකාරය තෝරන්න.",
+      theme_light: "දීප්තිමත්",
+      theme_dark: "අඳුරු",
+      theme_system: "උපාංගයේ සැකසුමට අනුව",
 
       howto_object_heading: "අරමුණ",
-      howto_object_text: "සෑම වටයකම ඔබේ අතේ ඇති සියලුම කාඩ් ක්‍රීඩා කර මුලින්ම ඉවර කරන්න. වටයක් අවසන් වූ විට, අනෙක් ක්‍රීඩකයින්ගේ අතේ ඉතිරි කාඩ් අනුව ඔබට ලකුණු ලැබේ. මුලින්ම <strong>ලකුණු 500</strong> ලබා ගන්නා ක්‍රීඩකයා ක්‍රීඩාව ජයගනී — මෙම යෙදුම මඟින් එම එකතුව සහ ඉතිහාසය ස්වයංක්‍රීයව සටහන් කර ගනියි.",
+      howto_object_text: "සෑම වටයක ම ඔබේ අතේ ඇති සියලු ම කාඩ් සෙල්ලම් කර මුලින්ම ඉවර කරන්න. වටයක් අවසන් වූ විට, අනෙක් අයගේ අතේ ඉතිරි කාඩ් අනුව ඔබට ලකුණු ලැබේ. මුලින් ම <strong>ලකුණු 500</strong> ලබා ගන්නා කෙනා ජය ගනී. — මෙම යෙදුම මඟින් එම එකතුව සහ ඉතිහාසය ස්වයංක්‍රීයව සටහන් කර ගනියි.",
       howto_deck_heading: "කාඩ් කට්ටලයේ ඇති දේ",
-      howto_deck_text: "සාමාන්‍ය කට්ටලයක කාඩ් 112ක් ඇත: නිල්, කොළ, රතු, කහ යන සෑම වර්ණයකටම අංක කාඩ් (0–9) 19 බැගින්, Skip කාඩ් 8ක්, Reverse කාඩ් 8ක්, Draw Two කාඩ් 8ක් (සෑම වර්ණයකටම දෙකක් බැගින්), Wild කාඩ් 4ක්, Wild Draw Four කාඩ් 4ක්, සහ නිවසේ නීති සඳහා හෝ නැතිවූ කාඩ්පතක් වෙනුවට යෙදීමට හිස් කාඩ් 4ක්.",
+      howto_deck_text: "සාමාන්‍ය කට්ටලයක කාඩ් 112ක් ඇත. නිල්, කොළ, රතු, කහ යන සෑම වර්ණයකට ම අංක කාඩ් (0–9) 19 බැගින් ද, Skip කාඩ් 8 ක් ද, Reverse කාඩ් 8 ක් ද, Draw Two කාඩ් 8 ක් ද (සෑම වර්ණයකට ම දෙකක් බැගින්), Wild කාඩ් 4 ක් ද, Wild Draw Four කාඩ් 4 ක් ද, සහ නිවසේ නීති සඳහා හෝ නැති වූ කාඩ්පතක් වෙනුවට යෙදීම සඳහා හිස් කාඩ් 4 ක් ද වශයෙන්.",
       howto_setup_heading: "ආරම්භය",
-      howto_setup_text: "සෑම ක්‍රීඩකයෙකුම කාඩ්පතක් අදියි — වැඩිම වටිනාකම ඇති කෙනා කාඩ් බෙදන්නා වේ. කාඩ් බෙදන්නා කට්ටලය මිශ්‍ර කර සෑම ක්‍රීඩකයෙකුටම කාඩ් 7ක් බෙදයි, ඉතිරි කාඩ් උඩුයටිකුරුව තබා අදින කුට්ටිය සාදයි. එහි උඩින්ම ඇති කාඩ්පත පෙරළා දැමීමෙන් පෙරළා දැමීමේ කුට්ටිය ආරම්භ කරයි (එය Wild Draw Four කාඩ් එකක් නම්, එය නැවත කට්ටලයට දමා මිශ්‍ර කර අලුත් කාඩ්පතක් පෙරළිය යුතුයි).",
-      howto_turn_heading: "වාරයක් ගැනීම",
-      howto_turn_text: "ක්‍රීඩාව ආරම්භ වන්නේ කාඩ් බෙදන්නාගේ වම් පසින් වන අතර, වම් දෙසට ගමන් කරයි. ඔබේ වාරයේදී, පෙරළා දැමීමේ කුට්ටියේ උඩින්ම ඇති කාඩ්පතේ <strong>වර්ණය</strong>, <strong>අංකය</strong>, හෝ <strong>සලකුණ</strong> අනුව ගැලපෙන කාඩ්පතක් ක්‍රීඩා කරන්න — නැතහොත් Wild කාඩ්පතක් ක්‍රීඩා කරන්න. ගැලපෙන කාඩ්පතක් නැද්ද? අදින කුට්ටියෙන් එක් කාඩ්පතක් අදින්න; එය ගැලපේ නම් ක්‍රීඩා කරන්න, නැත්නම් ඔබේ වාරය අවසන් වේ. අදින කුට්ටිය කිසි විටෙක හිස් වුවහොත්, පෙරළා දැමීමේ කුට්ටිය (එහි උඩින්ම ඇති කාඩ්පත තබාගෙන) මිශ්‍ර කර ක්‍රීඩාව දිගටම කරගෙන යන්න. ඔබට ක්‍රීඩා කළ හැකි කාඩ්පතක් තිබුණත් එය ක්‍රීඩා නොකර (<strong>reneging</strong>) අදින්නටත් තෝරාගත හැක — එසේ අදින කාඩ්පත ගැලපේ නම් එය ක්‍රීඩා කළ හැකි ය. නමුත් ඉන්පසු ඔබේ අතේ ඇති වෙනත් කාඩ්පතක් එම වාරයේදී ක්‍රීඩා කළ නොහැක.",
+      howto_setup_text: "ආරම්භයේ දී සෑම අයෙකු ම කුට්ටියෙන් කාඩ්පතක් අදියි. වැඩිම වටිනාකම ඇති කෙනා කාඩ් බෙදන්නා වේ. කාඩ් බෙදන්නා කට්ටලය මිශ්‍ර කර සෑම ක්‍රීඩකයෙකුට ම කාඩ් 7 ක් බැගින් බෙදයි. ඉතිරි කාඩ් උඩුයටිකුරුව තබා අදින කුට්ටිය සාදයි. එහි උඩින් ම ඇති කාඩ්පත පෙරළා දැමීමෙන් පෙරළා දැමීමේ කුට්ටිය සාදයි. (එය Wild Draw Four කාඩ් එකක් නම්, එය නැවත කට්ටලයට දමා මිශ්‍ර කර අලුත් කාඩ්පතක් පෙරළිය යුතු ය.)",
+      howto_turn_heading: "වටයක් සෙල්ලම් කරන අයුරු",
+      howto_turn_text: "සෙල්ලම පටන් ගන්නේ කාඩ් බෙදන්නාගේ වම් පසින් වන අතර, වම් දෙසට ගමන් කරයි. ඔබේ වාරයේදී, පෙරළා දැමීමේ කුට්ටියේ උඩින්ම ඇති කාඩ්පතේ <strong>වර්ණය</strong>, <strong>අංකය</strong>, හෝ <strong>සලකුණ</strong> අනුව ගැලපෙන කාඩ්පතක් දමා සෙල්ලම් කළ යුතු ය. නැතහොත් Wild කාඩ්පතක් ක්‍රීඩා කළ හැකි ය. ගැලපෙන කාඩ්පතක් නැද්ද? අදින කුට්ටියෙන් එක් කාඩ්පතක් ගන්න. එය ගැලපේ නම් ක්‍රීඩා කළ හැකි ය. නැත්නම් ඔබේ වාරය අවසන් වේ. සෙල්ලම අතරමඟ දී අදින කුට්ටිය හිස් වුවහොත්, පෙරළා දැමීමේ කුට්ටිය (එහි උඩින්ම ඇති කාඩ්පත පමණක් එහි ඉතිරි කරමින්) මිශ්‍ර කර සෙල්ලම දිගටම කරගෙන යා යුතු ය. ඔබට දැමීමට කාඩ්පතක් තිබුණත් එය ක්‍රීඩා නොකර (<strong>reneging</strong>) අදින කුට්ටියෙන් කාඩ්පතක් ඇදීම ත් සිදු කළ හැකි ය. එසේ අදින කාඩ්පත ගැලපේ නම් එය දැමිය හැකි ය. නමුත් ඉන්පසු ඔබේ අතේ ඇති වෙනත් කාඩ්පතක් එම වාරයේදී දැමිය නොහැකි ය.",
       howto_special_heading: "විශේෂ කාඩ්",
       howto_col_card: "කාඩ්පත",
       howto_col_effect: "බලපෑම",
       howto_skip_name: "Skip",
-      howto_skip_effect: "ඊළඟ ක්‍රීඩකයාගේ වාරය මග හැරේ.",
+      howto_skip_effect: "ඊළඟ කෙනාගේ වාරය මග හැරේ.",
       howto_reverse_name: "Reverse",
-      howto_reverse_effect: "ක්‍රීඩා කරන දිශාව ප්‍රතිවිරුද්ධ වේ.",
+      howto_reverse_effect: "සෙල්ලම කරන දිශාව මාරු වේ.",
       howto_draw2_name: "Draw Two",
-      howto_draw2_effect: "ඊළඟ ක්‍රීඩකයා කාඩ් 2ක් ඇදිය යුතු අතර ඔහුගේ වාරය මග හැරේ.",
+      howto_draw2_effect: "ඊළඟ කෙනා කාඩ් 2 ක් කුට්‌ටියෙන් ගත යුතු අතර ඔහුගේ වාරය ද මඟ හැරේ.",
       howto_wild_name: "Wild",
-      howto_wild_effect: "ක්‍රීඩා කරන වර්ණය වෙනස් කරයි.",
+      howto_wild_effect: "සෙල්ලම් කරන වර්ණය වෙනස් කරයි.",
       howto_wild4_name: "Wild Draw Four",
-      howto_wild4_effect: "වර්ණය වෙනස් කරයි; ඊළඟ ක්‍රීඩකයා කාඩ් 4ක් ඇදිය යුතු අතර ඔහුගේ වාරය මග හැරේ. වත්මන් වර්ණයට ගැලපෙන කාඩ්පතක් ඔබේ අතේ නැති විට පමණක් මෙය ක්‍රීඩා කළ හැකි ය. — අභියෝගයට ලක්වී වරදකරු වුවහොත්, ඔබ ම කාඩ් 4 ක් ඇදිය යුතු ය; නිවැරදි නම්, අභියෝග කළ අය කාඩ් 4ක් සහ තවත් 2ක් ඇදිය යුතු ය.",
-      howto_uno_heading: "\"UNO\" කීම සහ ක්‍රීඩාවෙන් ඉවත් වීම",
-      howto_uno_text: "ඔබේ අවසාන කාඩ්පතට පෙර කාඩ්පත ක්‍රීඩා කරන විට, <strong>\"UNO\"</strong> කියා හඬ නගා කියන්න. එය වෙනත් ක්‍රීඩකයකු මතක් කිරීමට පෙර සිදු කළ යුතු ය. එසේ වුවහොත්? ඔබට දඬුවම් කාඩ් <strong>2ක්</strong> ඇදීමට සිදු වේ. නමුත් එම අනෙක් ක්‍රීඩකයාට ඔබ ව අල්ලා ගත හැක්කේ ඔබට පසු ක්‍රීඩකයාගේ කාඩ් පත දැමීමට පෙර පමණි. එසේ නොවුවහොත් ඔබ නිදහස් ය. ක්‍රීඩකයෙකු තම අවසාන කාඩ්පත ක්‍රීඩා කළ ගමන්ම එම වටය අවසන් වේ; අවසාන කාඩ්පත Draw Two හෝ Wild Draw Four කාඩ් එකක් නම්, ඊළඟ ක්‍රීඩකයාට එම අදාල කාඩ් ගණන ඇදීමට සිදු වේ.",
+      howto_wild4_effect: "සෙල්ලම් කරන වර්ණය වෙනස් කරයි. ඊළඟ කෙනා කාඩ් 4 ක් කුට්ටියෙන් ගත යුතු අතර ඔහුගේ වාරය ද මඟ හැරේ. වත්මන් සෙල්ලම් කරන වර්ණයට ගැලපෙන කාඩ්පතක් ඔබේ අතේ නැති විට පමණක් මෙය ක්‍රීඩා කළ හැකි ය. එසේ නොවී අභියෝගයට ලක් වී වරදකරු වුවහොත්, ඔබ ම කාඩ් 4 ක් කුට්ටියෙන් ඇදිය යුතු ය. ඔබ නිවැරදි නම්, අභියෝග කළ කෙනා කාඩ් 4 ක් සහ තවත් අමතර කාඩ් 2 ක් ද ඇදිය යුතු ය. එසේ අභියෝග කළ හැක්කේ මෙම කාඩ් පත දැමූ කෙනාට පසු ව සෙල්ලම් කරන කෙනාට පමණි. එම පසු ව සෙල්ලම් කරන කෙනා කාඩ්පතක් දැමීමට පෙර අභියෝග කරන්නේ නම් එය සිදු කළ යුතු ය. අභියෝග කරන්නේ නම්, එසේ කළ පසු Wild Draw Four දැමූ කෙනා ඔහුගේ අතෙහ් ඇති කාඩ්පත් අභියෝග කළ කෙනාට පමණක් පෙන්විය යුතු ය.",
+      howto_uno_heading: "\"UNO\" කීම සහ වටය අවසන් කිරීම",
+      howto_uno_text: "ඔබ දැමීමට සූදානම් වන්නේ ඔබේ අවසාන කාඩ්පතට පෙර කාඩ්පත නම්, එය මේසයට දැමීමට පෙර <strong>\"UNO\"</strong> කියා හඬ නගා කියන්න. වෙනත් අයෙකු මතක් කිරීමට පෙර ඔබ එය සිදු කළ යුතු ය. එසේ නොවුවහොත්? ඔබට දඬුවම් කාඩ්පත් <strong>2 ක්</strong> ගැනීමට සිදු වේ. නමුත් එම අනෙක් කෙනාට ඔබ ව අල්ලා ගත හැක්කේ ඔබට පසු කෙනාගේ කාඩ් පත මේසයට දැමීමට පෙර පමණි. එසේ නොවුවහොත් ඔබ නිදහස් ය. අයෙකු තම අවසාන කාඩ්පත ක්‍රීඩා කළ ගමන් ම එම වටය අවසන් වේ. අවසාන කාඩ්පත Draw Two හෝ Wild Draw Four කාඩ් එකක් නම්, ඊළඟ කෙනාට එම අදාල කාඩ් ගණන කුට්ටියෙන් ගැනීමට සිදු වේ.",
       howto_scoring_heading: "වටයක ලකුණු ගණනය කිරීම",
       howto_scoring_col_cards: "විරුද්ධවාදීන්ගේ අතේ ඉතිරි කාඩ්",
       howto_scoring_col_points: "ලකුණු",
       howto_scoring_number_label: "අංක කාඩ් (0–9)",
       howto_scoring_number_value: "කාඩ්පතේ අංකය",
       howto_scoring_srdlabel: "Skip / Reverse / Draw Two",
-      howto_scoring_20each: "එකකට 20",
+      howto_scoring_20each: "එකකට 20 බැගින්",
       howto_scoring_wildlabel: "Wild / Wild Draw Four",
-      howto_scoring_50each: "එකකට 50",
-      howto_scoring_note1: "ඔබේ විරුද්ධවාදීන්ගේ අතේ ඉතිරි සියලුම කාඩ්වල ලකුණු එකතු කරන්න — එම එකතුව වටයේ ජයග්‍රාහකයාගේ ලකුණු බවට පත්ව, වත්මන් ක්‍රීඩා ටැබයේ වටයක් ලෙස ඇතුළත් කරයි. (හිස් කාඩ්වලට නියමිත වටිනාකමක් නැත — ඔබේ නිවසේ නීතියකට එකඟ වන්න, නැතහොත් එය ප්‍රතිස්ථාපනය කරන කාඩ්පතේ වටිනාකමට ගළපන්න.)",
-      howto_scoring_note2: "මෙය සම්මත ලකුණු ගණනය කිරීමේ ක්‍රමය වන අතර, මෙම යෙදුම අනුගමනය කරන්නේද එයයි: වටයේ ජයග්‍රාහකයාගේ එකතුව ඉහළ යන අතර, ලකුණු 500දී <strong>වැඩිම</strong> එකතුව ඇති කෙනා ජය ගනී. නිල නීතිවල සරල විකල්ප ක්‍රමයක්ද විස්තර කර ඇත, එහිදී කිසිම \"වටයේ ජයග්‍රාහකයෙක්\" ඇතුළත් නොකරයි — ඒ වෙනුවට සෑම ක්‍රීඩකයෙකුම සෑම අතක් අවසානයේ තමන් අතේ තිබූ කාඩ් වල ලකුණු එකතුව තමන් ම නිරීක්ෂණය කරයි, කවුරුන් හෝ ලකුණු 500ක් ලබා ගතහොත් <strong>අඩුම</strong> එකතුව ඇති කෙනා ජයගනී.",
+      howto_scoring_50each: "එකකට 50 බැගින්",
+      howto_scoring_note1: "ඔබේ විරුද්ධවාදීන්ගේ අතේ ඉතිරි සියලුම කාඩ්වල ලකුණු එකතු කරන්න. එම එකතුව වටයේ ජයග්‍රාහකයාගේ ලකුණු බවට පත් ව, 'සෙල්ලම' ටැබයේ වටයක් ලෙස ඇතුළත් කරයි.",
+      howto_scoring_note2: "මෙය සම්මත ලකුණු ගණනය කිරීමේ ක්‍රමය වන අතර, මෙම යෙදුම අනුගමණය කරන්නේ ද එයයි. වටයේ ජයග්‍රාහකයාගේ එකතුව ඉහළ යන අතර, ලකුණු 500 දී <strong>වැඩිම</strong> එකතුව ඇති කෙනා ජය ගනී.",
       howto_winning_heading: "ජයග්‍රහණය",
-      howto_winning_text: "යම් ක්‍රීඩකයෙකුගේ එකතුව ලකුණු 500ට පැමිණෙන තෙක් ක්‍රීඩා කරගෙන යන්න. ක්‍රීඩාවක් ආරම්භයේදී කාඩ් බෙදන (සහ මුලින්ම ක්‍රීඩා කරන) අය අහඹු ලෙස තෝරා ගැනීමට <strong>කාඩ් බෙදන්නා තෝරන්න</strong> භාවිත කරන්න.",
+      howto_winning_text: "යම් ක්‍රීඩකයෙකුගේ එකතුව ලකුණු 500 ට පැමිණෙන විට ඔහු ජයග්‍රාහකයා බවට පත් වේ.",
       howto_blank_heading: "හිස් කාඩ්",
-      howto_blank_text: "ඔබේ කාඩ් කට්ටලයෙන් නැතිවූ හෝ හානි වූ කාඩ්පතක් වෙනුවට හිස් කාඩ්පතක් භාවිත කරන්න (එහි එම අගය ලියන්න), නැතහොත් ඔබේම නිවසේ නීතියක් නිර්මාණය කර එය හිස් කාඩ්පතක ලියා කට්ටලයට මිශ්‍ර කරන්න.",
+      howto_blank_text: "ඔබේ කාඩ් කට්ටලයෙන් නැති වූ හෝ හානි වූ කාඩ්පතක් වෙනුවට මෙම හිස් කාඩ්පතක් භාවිත කළ හැකි ය. එහි එම අගය ලියා භාවිත කළ හැකි ය. නැතහොත් ඔබේම නිවසේ නීතියක් නිර්මාණය කර එය හිස් කාඩ්පතක ලියා කට්ටලයට මිශ්‍ර කළ හැකි ය.",
       howto_variants_heading: "වෙනස් ක්‍රම",
-      howto_variants_intro: "ක්‍රීඩා කිරීමට නිල විකල්ප ක්‍රම — ඔබ මේසයේදී කුමන ක්‍රමයක් භාවිත කළත්, මෙම යෙදුමේ ලකුණු ගණනය කිරීම සැමවිටම ඉහත සම්මත නීති අනුගමනය කරයි.",
-      howto_variant_two_players: "<strong>ක්‍රීඩකයින් දෙදෙනෙක්</strong> — Reverse සහ Skip යන දෙකම ක්‍රීඩාව ඉදිරියට යැවීම වෙනුවට ඔබට ක්ෂණිකව තවත් කාඩ්පතක් ක්‍රීඩා කිරීමට ඉඩ දෙයි. ඔබ ක්‍රීඩා කරන Draw Two හෝ Wild Draw Four කාඩ්පතක් ඔබේ එකම විරුද්ධවාදියාට කාඩ් අදීම යවයි, පසුව ක්‍රීඩාව කෙලින්ම ඔබ වෙත නැවත පැමිණේ.",
-      howto_variant_partners: "<strong>සහකරුවන් (ක්‍රීඩකයින් 4)</strong> — ඔබේ සහකරුට ඉදිරිපසින් වාඩි වී, එකිනෙකාගේ අත් රහසිගතව තබා ගන්න. එක් සහකරුවෙකු ඉවර කළ ගමන්ම එම අත අවසන් වේ; ජය ලබන කණ්ඩායමේ ලකුණු ලෙස, විරුද්ධ කණ්ඩායමේ දෙදෙනාගේම අතේ ඉතිරි කාඩ් එකතු කරන්න.",
-      howto_variant_rotating: "<strong>වාරයෙන් වාරයට සහකරුවන් මාරු වීම (ක්‍රීඩකයින් 4)</strong> — මුළුමනින්ම අත් 12ක් ක්‍රීඩා කරන්න, අනෙක් ක්‍රීඩකයන් තිදෙනා සමඟම එකින් එක අත් 4ක් බැගින් සහකාරිත්වයෙන් ක්‍රීඩා කරන්න. සෑම සහකාරිත්වයකදීම ලබන ලකුණු වෙන වෙනම නිරීක්ෂණය කරන්න; අත් 12 අවසානයේ වැඩිම එකතුව ඇති අයා ජයගනී.",
-      howto_variant_multitable: "<strong>බහු-මේස තරඟාවලි</strong> — ක්‍රීඩකයින් 8ක් සිටින විට, ක්‍රීඩකයින් 4 බැගින් වූ මේස දෙකක් එකවර ක්‍රියාත්මක කරන්න, එක් එක් ක්‍රීඩකයා අනෙක් මේසයේ කෙනෙකු සමඟ යුගල කරන්න, සහ සියලුම අත් හරහා එක් එක් ක්‍රීඩකයාගේ ලකුණු එකතු කරන්න.",
-      howto_variant_challenge: "<strong>Challenge UNO</strong> — සෑම අතකදීම ජයග්‍රාහකයාට ලකුණු දීම වෙනුවට, සෑම ක්‍රීඩකයෙකුම අල්ලා ගැනුණු විට තිබූ කාඩ්වල ලකුණු එකතුවක් තබා ගන්න. නියමිත ඉලක්කයකට (ලකුණු 500 නිර්දේශිතයි) පැමිණි විට එම ක්‍රීඩකයා ක්‍රීඩාවෙන් ඉවත් වේ. දෙදෙනෙකු ඉතිරි වූ විට, ඉහත ක්‍රීඩකයින් දෙදෙනාගේ නීති අනුව මුහුණට මුහුණ ක්‍රීඩා කර අවසන් කරයි; මුලින්ම ඉලක්කයට පැමිණෙන අයා පරාද වන අතර, අනෙක් අයා ජයගනී."
+      howto_variants_intro: "සෙල්ලම් කිරීමට නිල විකල්ප ක්‍රම — ඔබ මේසයේදී කුමන ක්‍රමයක් භාවිත කළත්, මෙම යෙදුමේ ලකුණු ගණනය කිරීම සැමවිටම ඉහත සම්මත නීති අනුගමනය කරයි.",
+      howto_variant_two_players: "<strong>ක්‍රීඩකයින් දෙදෙනෙක් සෙල්ලම් කිරීම</strong> — Reverse සහ Skip යන දෙකම ඔබට ක්ෂණිකව තවත් කාඩ්පතක් දැමීමට ඉඩ දෙයි. ඔබ දමන Draw Two හෝ Wild Draw Four කාඩ්පතක් මඟින් ඔබේ එකම විරුද්ධවාදියාට අදාල කාඩ්පතට අනුව කාඩ් ප්‍රමාණයක් කුට්ටියෙන් ගැනීමට සිදු වේ. පසුව ඊළඟ වාරය කෙළින් ම ඔබ වෙත නැවත පැමිණේ.",
+      howto_variant_partners: "<strong>සහකරුවන් සමඟ සෙල්ලම් කිරීම (ක්‍රීඩකයින් 4 දෙනෙක් සිටින විට)</strong> — ඔබේ සහකරුට ඉදිරිපසින් වාඩි වී, එකිනෙකාගේ අත් රහසිගතව තබා ගන්න. එක් සහකරුවෙකු ඉවර කළ ගමන්ම එම වටය අවසන් වේ; ජය ලබන කණ්ඩායමේ ලකුණු ලෙස, විරුද්ධ කණ්ඩායමේ දෙදෙනාගේම අතේ ඉතිරි කාඩ් එකතු කළ යුතු ය.",
+      howto_variant_rotating: "<strong>වාරයෙන් වාරයට සහකරුවන් මාරු කර සෙල්ලම් කිරීම (ක්‍රීඩකයින් 4 දෙනෙක් සිිටින විට)</strong> — මුළුමනින්ම අත් 12ක් සෙල්ලම් කළ යුතු ය. අනෙක් ක්‍රීඩකයන් තිදෙනා සමඟ ම එකින් එක අත් 4 ක් බැගින් සහකාරිත්වයෙන් ක්‍රීඩා කළ යුුතු ය. සෑම සහකාරිත්වයක දී ම ලබන ලකුණු වෙන වෙන ම එකතු කළ යුතු ය. අත් 12 අවසානයේ වැඩිම එකතුව ඇති කෙනා ජයගනී.",
+      howto_variant_multitable: "<strong>බහු-මේස තරඟාවලි</strong> — ක්‍රීඩකයින් 8 ක් සිටින විට, ක්‍රීඩකයින් 4 බැගින් වූ මේස දෙකක් එකවර ක්‍රියාත්මක වේ. මේස දෙකේ දී ම ජයග්‍රහණය කරන දෙදෙනා ඉහත පැහැදිලි කර දුන් ක්‍රීඩකයින් දෙදෙනෙක් සෙල්ලම් කරන ආකාරයට ක්‍රීඩා කර ජයග්‍රාහකයා තීරණය කරයි.",
+      howto_variant_challenge: "<strong>Challenge UNO</strong> — සෑම අතකදීම ජයග්‍රාහකයාට ලකුණු දීම වෙනුවට, තම තමන් අතේ තිබෙන කාඩ් වල ලකුණු තම තමන් එකතු කර ගැනීම සිදු කරයි. නියමිත ඉලක්කයකට (සාමාන්‍යයෙන් ලකුණු 500) පැමිණියහොත් එම ක්‍රීඩකයා ක්‍රීඩාවෙන් ඉවත් වේ. දෙදෙනෙකු ඉතිරි වූ විට, ඉහත පැහැදිලි කර දුන් ක්‍රීඩකයින් දෙදෙනෙක් සෙල්ලම් කරන ආකාරයට ක්‍රීඩා කර ජයග්‍රාහකයා තීරණය කරයි. මුලින්ම ඉලක්කයට පැමිණෙන කෙනා පරාජය වන අතර, අනෙක් කෙනා ජය ගනී."
     }
   };
   function t(key, vars){
@@ -562,6 +605,7 @@ a{color:var(--accent);}
   }
   function applyStaticText(){
     document.documentElement.lang = lang;
+    document.documentElement.dataset.theme = theme;
     document.title = t('app_title');
     document.querySelectorAll('[data-tkey]').forEach(function(elm){
       elm.textContent = t(elm.dataset.tkey);
@@ -1450,6 +1494,15 @@ a{color:var(--accent);}
           '<button type="button" class="'+(lang==='en'?'primary':'')+'" data-lang="en">'+t('language_en')+'</button>' +
           '<button type="button" class="'+(lang==='si'?'primary':'')+'" data-lang="si">'+t('language_si')+'</button>' +
         '</div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div class="sectionhead"><h2 style="font-size:18px;">'+t('theme_heading')+'</h2></div>' +
+        '<div class="muted" style="margin-bottom:10px;">'+t('theme_note')+'</div>' +
+        '<div class="row" style="gap:8px;flex-wrap:wrap;">' +
+          '<button type="button" class="'+(theme==='light'?'primary':'')+'" data-theme-choice="light">'+t('theme_light')+'</button>' +
+          '<button type="button" class="'+(theme==='dark'?'primary':'')+'" data-theme-choice="dark">'+t('theme_dark')+'</button>' +
+          '<button type="button" class="'+(theme==='system'?'primary':'')+'" data-theme-choice="system">'+t('theme_system')+'</button>' +
+        '</div>' +
       '</div>';
 
     el.querySelectorAll('[data-lang]').forEach(function(btn){
@@ -1459,6 +1512,13 @@ a{color:var(--accent);}
         renderSettings();
         var activeTab = document.querySelector('.tab.active');
         if(activeTab) renderActiveView(activeTab.dataset.view);
+      });
+    });
+
+    el.querySelectorAll('[data-theme-choice]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        setTheme(btn.dataset.themeChoice);
+        renderSettings();
       });
     });
   }
