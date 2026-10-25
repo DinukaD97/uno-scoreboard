@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, shell, dialog } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -31,14 +31,6 @@ ipcMain.handle('scoreboard:save', (event, json) => {
     return false;
   }
 });
-
-ipcMain.handle('scoreboard:reveal', () => {
-  ensureDataDir();
-  if (!fs.existsSync(dataFile)) fs.writeFileSync(dataFile, '{}', 'utf-8');
-  shell.showItemInFolder(dataFile);
-});
-
-ipcMain.handle('scoreboard:path', () => dataFile);
 
 ipcMain.handle('scoreboard:exportBackup', async (event, json) => {
   try {

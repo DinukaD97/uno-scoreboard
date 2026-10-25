@@ -327,10 +327,6 @@ a{color:var(--accent);}
       remove_player_title: "Remove player",
       remove_player_aria: "Remove {name}",
       cannot_remove_active: "Cannot remove a player who is in an active match. Finish or discard that match first.",
-      save_data_heading: "Save data",
-      save_data_loading: "Loading…",
-      save_data_note: "To move your players and match history to another PC, copy this file there (same path, after installing UNO Scoreboard) and overwrite the one it creates.",
-      show_in_file_manager: "Show in file manager",
       backup_heading: "Backup",
       backup_note: "Save your players and match history to a backup file, or load one from another PC.",
       export_backup_btn: "Export backup…",
@@ -499,16 +495,12 @@ a{color:var(--accent);}
       remove_player_title: "ක්‍රීඩකයා ඉවත් කරන්න",
       remove_player_aria: "{name} ඉවත් කරන්න",
       cannot_remove_active: "ක්‍රීඩාවක නිරත ක්‍රීඩකයෙකු ඉවත් කළ නොහැක. පළමුව එම ක්‍රීඩාව අවසන් කරන්න හෝ ඉවතලන්න.",
-      save_data_heading: "දත්ත සුරැකීම",
-      save_data_loading: "පූරණය වෙමින්…",
-      save_data_note: "ඔබේ ක්‍රීඩකයින් සහ ක්‍රීඩා ඉතිහාසය වෙනත් පරිගණකයකට ගෙන යාමට, මෙම ගොනුව එහි (UNO ලකුණු පුවරුව ස්ථාපනය කිරීමෙන් පසු, එකම ස්ථානයට) පිටපත් කර එහි ඇති ගොනුව උඩින් ලියන්න.",
-      show_in_file_manager: "ගොනු කළමනාකරුවේ පෙන්වන්න",
-      backup_heading: "උපස්ථය",
-      backup_note: "ඔබේ ක්‍රීඩකයින් සහ ක්‍රීඩා ඉතිහාසය උපස්ථ ගොනුවකට සුරකින්න, හෝ වෙනත් පරිගණකයක ගොනුවක් පූරණය කරන්න.",
-      export_backup_btn: "උපස්ථය නිර්යාත කරන්න…",
-      import_backup_btn: "උපස්ථය ආයාත කරන්න…",
-      backup_saved_to: "උපස්ථය සුරකින ලද ස්ථානය:\n{path}",
-      backup_export_failed: "උපස්ථය නිර්යාත කිරීම අසාර්ථක විය.",
+      backup_heading: "දත්ත මතකය",
+      backup_note: "ඔබේ ක්‍රීඩකයින් සහ සෙල්ලම් කර ඇති ඉතිහාසය ගොනුවක් ලෙස ලබා ගන්න, නැතහොත් වෙනත් තැනක සුරැකි ගොනුවක් මෙයට ස්ථාපනය කරන්න.",
+      export_backup_btn: "ගොනුවක් ලෙස ලබා ගන්න…",
+      import_backup_btn: "සුරැකිව ඇති ගොනුව තෝරන්න…",
+      backup_saved_to: "ගොනුව සුරැකූ ස්ථානය:\n{path}",
+      backup_export_failed: "ගොනුව ලබා ගැනීමට නොහැකි විය. නැවත උත්සාහ කරන්න.",
       backup_invalid_json: "එම ගොනුව වලංගු උපස්ථ ගොනුවක් ලෙස නොපෙනේ.",
       backup_invalid_format: "එම ගොනුව UNO ලකුණු පුවරුව උපස්ථයක් ලෙස නොපෙනේ.",
       backup_replace_confirm: "ආයාත කළ උපස්ථය මගින් සියලුම ක්‍රීඩකයින් සහ ක්‍රීඩා ඉතිහාසය ප්‍රතිස්ථාපනය කරන්නද?",
@@ -674,7 +666,6 @@ a{color:var(--accent);}
   }
 
   var state = { players: [], matches: [], activeMatches: [], activeMatchId: null };
-  var dataFilePath = '';
 
   function migrateState(s){
     if(!Array.isArray(s.activeMatches)){
@@ -782,12 +773,6 @@ a{color:var(--accent);}
         (state.players.length ? '<div class="playerlist">'+rows+'</div>' : '<div class="empty">'+t('no_players_empty')+'</div>') +
       '</div>' +
       '<div class="card">' +
-        '<div class="sectionhead"><h2 style="font-size:15px;">'+t('save_data_heading')+'</h2></div>' +
-        '<div class="muted" style="margin-bottom:10px;word-break:break-all;">'+esc(dataFilePath || t('save_data_loading'))+'</div>' +
-        '<div class="muted" style="margin-bottom:10px;">'+t('save_data_note')+'</div>' +
-        '<button id="reveal-data-btn">'+t('show_in_file_manager')+'</button>' +
-      '</div>' +
-      '<div class="card">' +
         '<div class="sectionhead"><h2 style="font-size:15px;">'+t('backup_heading')+'</h2></div>' +
         '<div class="muted" style="margin-bottom:10px;">'+t('backup_note')+'</div>' +
         '<div class="row" style="gap:8px;flex-wrap:wrap;">' +
@@ -795,11 +780,6 @@ a{color:var(--accent);}
           '<button id="import-backup-btn">'+t('import_backup_btn')+'</button>' +
         '</div>' +
       '</div>';
-
-    var revealBtn = document.getElementById('reveal-data-btn');
-    if(revealBtn) revealBtn.addEventListener('click', function(){
-      try{ window.scoreboardAPI.reveal(); }catch(e){}
-    });
 
     var exportBackupBtn = document.getElementById('export-backup-btn');
     if(exportBackupBtn) exportBackupBtn.addEventListener('click', async function(){
@@ -1615,7 +1595,6 @@ a{color:var(--accent);}
   // ---------- init ----------
   (async function init(){
     state = await loadState();
-    try{ dataFilePath = await window.scoreboardAPI.getPath(); }catch(e){}
     if(state.players.length===0){
       state.players = [{id:uid(), name:'Player 1'}, {id:uid(), name:'Player 2'}];
     }
